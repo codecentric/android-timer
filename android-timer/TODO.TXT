@@ -12,17 +12,26 @@
 
 ==TODO==
 
-* optional notification while counting down
-* Alarm rings for 5 min max. Configurable.
-* Make supressLeadingZeroOnHighestNonNullTimePart for ShowCountdownActivity
-  configurable.
+=== FEATURES NEEDED BEFORE PUBLISHING ON GOOGLE PLAY STORE ===
 
+* Alarm rings for 5 min max. Configurable.
 * Change configuration of time fields to use so that it is not possible to
   show hours and seconds but not minutes (which makes no sense). Use an option
   list with the following options:
   - hours, minutes and seconds
   - hours and minutes
   - minutes and seconds
+* Configure multiple timers and save them
+* Select alarm sound from:
+  + Phone alarm tones and ringtones
+  + Custom MP3 file
+* License?
+
+=== OTHER FEATURES (LATER) ===
+
+* Make supressLeadingZeroOnHighestNonNullTimePart for ShowCountdownActivity
+  configurable.
+* optional notification while counting down
 
 * User hints (things that may not be obvious) - how can we tell the user
   about these features? 
@@ -42,8 +51,6 @@
 
 * StartupActivity does not really need to connect to the service, does it?
 
-* New app name (including codecentric branding?)
-* New package name (including codecentric...)
 * [BUG] When changing used time fields from set timer acitivity, the timer is resetted
   to the last timer that was actually started. It would be nicer to keep the current
   value (adapted to missing fields)
@@ -56,19 +63,10 @@
   - http://daverog.wordpress.com/2009/12/14/why-android-isnt-ready-for-tdd-and-how-i-tried-anyway/
     (approach with second non-Android project to use for testing)
 
-* Select alarm sound from:
-  + Phone alarm tones and ringtones
-  + Custom MP3 file
-
-* Configure multiple timers and save them
-
 * Configure warning sounds when x minutes/seconds are left
 
 * ? Reset button: I don't think we need one - when returning to SetTimerActivity,
   the time the user entered is there implicitly
-
-* Publish to google code/github or similar. License?
-* Publish to market - ask Andreas/marketing if its okay, also with regard to codecentric branding etc. and who's the publisher
 
 * Test all possible workflows in all three activities:
   - Home button, then start app again:
