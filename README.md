@@ -6,8 +6,8 @@ This Android app is a simple countdown timer. You can set the timer (hours, minu
 In detail, the app offers a few more features:
 
 * Two different styles to set the timer:
-    * simple text fields
-    * wheels (similar to slot machine reels, credit goes to the [android-wheel project](http://code.google.com/p/android-wheel/)
+    * simple text fields or
+    * wheels (similar to slot machine reels, credit goes to the [android-wheel project](http://code.google.com/p/android-wheel/))
 * Two different visualizations for a running countdown:
     * display remaining time like a digital clock,
     * visualize remaining time versus total time as a pie chart or
