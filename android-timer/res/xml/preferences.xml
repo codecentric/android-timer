@@ -1,0 +1,72 @@
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+    android:key="root_preference_screen" >
+
+    <PreferenceScreen
+        android:key="set_timer_preference_screen"
+        android:title="Setting the timer" >
+        <PreferenceCategory android:title="Input method" >
+            <ListPreference
+                android:defaultValue="@string/default_value_set_timer_method"
+                android:dialogTitle="@string/dialog_title_set_timer_method"
+                android:entries="@array/entries_set_timer_method"
+                android:entryValues="@array/entryvalues_set_timer_method"
+                android:key="@string/key_set_timer_method"
+                android:summary="@string/summary_set_timer_method"
+                android:title="@string/title_set_timer_method" />
+        </PreferenceCategory>
+        <PreferenceCategory android:title="Wheels configuration" >
+            <ListPreference
+                android:defaultValue="@string/default_value_wheel_direction"
+                android:dialogTitle="@string/dialog_title_wheel_direction"
+                android:entries="@array/entries_wheel_direction"
+                android:entryValues="@array/entryvalues_wheel_direction"
+                android:key="@string/key_wheel_direction"
+                android:summary="@string/summary_wheel_direction"
+                android:title="@string/title_wheel_direction" />
+        </PreferenceCategory>
+        <PreferenceCategory android:title="Input fields" >
+            <CheckBoxPreference
+                android:defaultValue="@bool/default_value_use_hours"
+                android:key="@string/key_use_hours"
+                android:summary="@string/summary_use_hours"
+                android:title="@string/title_use_hours" />
+            <CheckBoxPreference
+                android:defaultValue="@bool/default_value_use_minutes"
+                android:key="@string/key_use_minutes"
+                android:summary="@string/summary_use_minutes"
+                android:title="@string/title_use_minutes" />
+            <CheckBoxPreference
+                android:defaultValue="@bool/default_value_use_seconds"
+                android:key="@string/key_use_seconds"
+                android:summary="@string/summary_use_seconds"
+                android:title="@string/title_use_seconds" />
+        </PreferenceCategory>
+    </PreferenceScreen>
+    <PreferenceScreen
+        android:key="show_countdown_preference_screen"
+        android:title="Showing the countdown" >
+        <PreferenceCategory android:title="Display settings" >
+            <CheckBoxPreference
+                android:defaultValue="@bool/default_value_keep_display_on"
+                android:key="@string/key_keep_display_on"
+                android:summary="@string/summary_keep_display_on"
+                android:title="@string/title_keep_display_on" />
+            <CheckBoxPreference
+                android:defaultValue="@bool/default_value_tap_anywhere_to_pause"
+                android:key="@string/key_tap_anywhere_to_pause"
+                android:summary="@string/summary_tap_anywhere_to_pause"
+                android:title="@string/title_tap_anywhere_to_pause" />
+            </PreferenceCategory>
+        <PreferenceCategory android:title="Visualization" >
+            <ListPreference
+                android:defaultValue="@string/default_value_show_countdown_options"
+                android:dialogTitle="@string/dialog_title_show_countdown_options"
+                android:entries="@array/entries_show_countdown_options"
+                android:entryValues="@array/entryvalues_show_countdown_options"
+                android:key="@string/key_show_countdown_options"
+                android:summary="@string/summary_show_countdown_options"
+                android:title="@string/title_show_countdown_options" />
+        </PreferenceCategory>
+    </PreferenceScreen>
+
+</PreferenceScreen>

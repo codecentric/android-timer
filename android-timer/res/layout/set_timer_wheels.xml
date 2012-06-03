@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/cc_logo_background"
+    android:orientation="vertical" >
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingBottom="70dp" >
+
+        <TableRow
+            android:id="@+id/tableRowWheels"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal" >
+
+            <kankan.wheel.widget.WheelView
+                android:id="@+id/wheelHours"
+                android:layout_width="60dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="5dp" />
+
+            <kankan.wheel.widget.WheelView
+                android:id="@+id/wheelMinutes"
+                android:layout_width="60dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="5dp" />
+
+            <kankan.wheel.widget.WheelView
+                android:id="@+id/wheelSeconds"
+                android:layout_width="60dp"
+                android:layout_height="80dp"
+                android:layout_gravity="center_vertical"
+                android:layout_margin="5dp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowLabels"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:gravity="center_horizontal" >
+
+            <TextView
+                android:id="@+id/textViewHours"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/set_timer_label_hours"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/textViewMinutes"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/set_timer_label_minutes"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/textViewSeconds"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/set_timer_label_seconds"
+                android:textSize="25sp" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowResetButtons"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal" >
+
+            <Button
+                android:id="@+id/buttonResetHours"
+                style="?android:attr/buttonStyleSmall"
+                android:gravity="center"
+                android:text="@string/set_timer_button_reset"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/buttonResetMinutes"
+                style="?android:attr/buttonStyleSmall"
+                android:gravity="center"
+                android:text="@string/set_timer_button_reset"
+                android:textSize="13sp" />
+
+            <Button
+                android:id="@+id/buttonResetSeconds"
+                style="?android:attr/buttonStyleSmall"
+                android:gravity="center"
+                android:text="@string/set_timer_button_reset"
+                android:textSize="13sp" />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:gravity="center_horizontal" >
+
+        <Button
+            android:id="@+id/buttonStart"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/set_timer_button_start" />
+
+        <Button
+            android:id="@+id/buttonClose"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/set_timer_button_close" />
+    </LinearLayout>
+
+</RelativeLayout>

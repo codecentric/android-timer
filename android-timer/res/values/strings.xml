@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_label">CC Timer</string>
+    <string name="app_name">CC Timer</string>
+
+    <!-- startup -->
+    <string name="startup_message">Starting…</string>
+
+    <!-- set timer views -->
+    <string name="set_timer_label_hours">HH</string>
+    <string name="set_timer_label_minutes">MM</string>
+    <string name="set_timer_label_seconds">SS</string>
+    <string name="set_timer_button_plus">+</string>
+    <string name="set_timer_button_minus">-</string>
+    <string name="set_timer_button_start">Start</string>
+    <string name="set_timer_button_close">Close</string>
+    <string name="set_timer_button_reset">00</string>
+
+    <!-- show countdown view -->
+    <string name="show_countdown_double_zero">00</string>
+    <string name="show_countdown_colon">:</string>
+    <string name="show_countdown_button_pause">Pause</string>
+    <string name="show_countdown_button_continue">Continue</string>
+    <string name="show_countdown_button_cancel">Cancel</string>
+    <string name="show_countdown_paused">PAUSED</string>
+
+    <!-- show alarm view -->
+    <string name="show_alarm_times">Time\'s</string>
+    <string name="show_alarm_up">up!</string>
+    <string name="show_alarm_stop_alarm">Stop Alarm</string>
+
+    <!-- preferences activity -->
+    <string name="preferences_title">Preferences</string>
+    <string name="title_use_hours">Display hours</string>
+    <string name="summary_use_hours">Provide an input for hours when setting the timer</string>
+    <string name="title_use_minutes">Display minutes</string>
+    <string name="summary_use_minutes">Provide an input for minutes when setting the timer</string>
+    <string name="title_use_seconds">Display seconds</string>
+    <string name="summary_use_seconds">Provide an input for seconds when setting the timer</string>
+    <string name="title_set_timer_method">How to set the timer…</string>
+    <string name="dialog_title_set_timer_method">How to set the timer</string>
+    <string name="summary_set_timer_method">Type of input control for setting the timer</string>
+    <string name="title_wheel_direction">Wheel direction…</string>
+    <string name="dialog_title_wheel_direction">Wheel direction</string>
+    <string name="summary_wheel_direction">Default: Roll up to increase, down to decrease - Reverted: vice versa</string>
+    <string name="title_keep_display_on">Don\'t turn off display</string>
+    <string name="summary_keep_display_on">Prevents display from turning off during countdown.</string>
+    <string name="title_tap_anywhere_to_pause">Tap anywhere to pause</string>
+    <string name="summary_tap_anywhere_to_pause">Tap anywhere on the display to pause or continue</string>
+    <string name="dialog_title_show_countdown_options">Show countdown as</string>
+    <string name="summary_show_countdown_options">How to visualize the countdown</string>
+    <string name="title_show_countdown_options">Show countdown as…</string>
+
+</resources>

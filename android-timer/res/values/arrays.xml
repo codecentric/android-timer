@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <array name="entries_set_timer_method">
+        <item>Fancy Wheels</item>
+        <item>Boring Text Fields</item>
+    </array>
+    <array name="entryvalues_set_timer_method">
+        <item>wheels</item>
+        <item>text_fields</item>
+    </array>
+    
+    <array name="entries_wheel_direction">
+        <item>Default</item>
+        <item>Reverted</item>
+    </array>
+    <array name="entryvalues_wheel_direction">
+        <item>descending</item>
+        <item>ascending</item>
+    </array>
+
+	<array name="entries_show_countdown_options">
+        <item>Pie Chart &amp; Time</item>
+        <item>Pie Chart Only</item>
+        <item>Time Only</item>
+    </array>
+    <array name="entryvalues_show_countdown_options">
+        <item>piechart+text</item>
+        <item>piechart</item>
+        <item>text</item>
+    </array>
+
+</resources>

@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- preference keys, values and default values -->
+<resources>
+
+    <string name="key_last_timer">de.codecentric.android.timer.last_timer</string>
+
+    <!-- time input fields -->
+    <string name="key_use_hours">de.codecentric.android.timer.use_hours</string>
+
+    <bool name="default_value_use_hours">false</bool>
+
+    <string name="key_use_minutes">de.codecentric.android.timer.use_minutes</string>
+
+    <bool name="default_value_use_minutes">true</bool>
+
+    <string name="key_use_seconds">de.codecentric.android.timer.use_seconds</string>
+
+    <bool name="default_value_use_seconds">true</bool>
+
+    <!-- timer input method -->
+    <string name="key_set_timer_method">de.codecentric.android.timer.set_timer_method</string>
+    <string name="value_set_timer_method_wheels">wheels</string>
+    <string name="value_set_timer_method_text_fields">text_fields</string>
+    <string name="default_value_set_timer_method">wheels</string>
+
+    <!-- wheel direction -->
+    <string name="key_wheel_direction">de.codecentric.android.timer.wheel_direction</string>
+    <string name="value_wheel_direction_descending">descending</string>
+    <string name="value_wheel_direction_ascending">ascending</string>
+    <string name="default_value_wheel_direction">descending</string>
+
+    <!-- prevent auto display off -->
+    <string name="key_keep_display_on">de.codecentric.android.timer.keep_display_on</string>
+
+    <bool name="default_value_keep_display_on">false</bool>
+
+    <!-- tap full screen to pause -->
+    <string name="key_tap_anywhere_to_pause">de.codecentric.android.timer.tap_anywhere_to_pause</string>
+
+    <bool name="default_value_tap_anywhere_to_pause">false</bool>
+
+    <!-- countdown visualization -->
+    <string name="key_show_countdown_options">de.codecentric.android.timer.show_countdown_options</string>
+    <string name="value_show_countdown_as_pie_chart_and_text">piechart+text</string>
+    <string name="value_show_countdown_as_pie_chart_only">piechart</string>
+    <string name="value_show_countdown_as_text_only">text</string>
+    <string name="default_value_show_countdown_options">piechart+text</string>
+
+</resources>

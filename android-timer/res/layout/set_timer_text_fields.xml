@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/cc_logo_background"
+    android:orientation="vertical" >
+
+    <TableLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:paddingBottom="70dp" >
+
+        <TableRow
+            android:id="@+id/tableRowPlus"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal" >
+
+            <Button
+                android:id="@+id/buttonPlusHours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/set_timer_button_plus" />
+
+            <Button
+                android:id="@+id/buttonPlusMinutes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/set_timer_button_plus" />
+
+            <Button
+                android:id="@+id/buttonPlusSeconds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/set_timer_button_plus" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowTextField"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal" >
+
+            <EditText
+                android:id="@+id/editTextHours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="3"
+                android:inputType="number" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/editTextMinutes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="3"
+                android:inputType="number" >
+            </EditText>
+
+            <EditText
+                android:id="@+id/editTextSeconds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ems="3"
+                android:inputType="number" >
+            </EditText>
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowMinus"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal" >
+
+            <Button
+                android:id="@+id/buttonMinusHours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/set_timer_button_minus" />
+
+            <Button
+                android:id="@+id/buttonMinusMinutes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/set_timer_button_minus" />
+
+            <Button
+                android:id="@+id/buttonMinusSeconds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/set_timer_button_minus" />
+        </TableRow>
+
+        <TableRow
+            android:id="@+id/tableRowLabels"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center_horizontal" >
+
+            <TextView
+                android:id="@+id/textViewHours"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/set_timer_label_hours"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/textViewMinutes"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/set_timer_label_minutes"
+                android:textSize="25sp" />
+
+            <TextView
+                android:id="@+id/textViewSeconds"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_horizontal"
+                android:text="@string/set_timer_label_seconds"
+                android:textSize="25sp" />
+        </TableRow>
+    </TableLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:gravity="center_horizontal" >
+
+        <Button
+            android:id="@+id/buttonStart"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/set_timer_button_start" />
+
+        <Button
+            android:id="@+id/buttonClose"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/set_timer_button_close" />
+    </LinearLayout>
+
+</RelativeLayout>

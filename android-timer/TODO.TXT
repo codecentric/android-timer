@@ -1,0 +1,140 @@
+==RETEST==
+
+* Make tap anywhere for ShowCountdown configurable, if enabled, hide button.
+  Default is false.
+* Display the word "PAUSED" when the countdown is paused.
+* [BUG] When set timer method preference is changed from ShowCountdownAct (or
+  probably also from ShowCountdownAct.) the new setting is not applied when
+  going back to SetTimerAct.
+* Additional button in wheel view to reset a time part to zero
+
+==IN PROGRESS==
+
+==TODO==
+
+* optional notification while counting down
+* Alarm rings for 5 min max. Configurable.
+* Make supressLeadingZeroOnHighestNonNullTimePart for ShowCountdownActivity
+  configurable.
+
+* Change configuration of time fields to use so that it is not possible to
+  show hours and seconds but not minutes (which makes no sense). Use an option
+  list with the following options:
+  - hours, minutes and seconds
+  - hours and minutes
+  - minutes and seconds
+
+* User hints (things that may not be obvious) - how can we tell the user
+  about these features? 
+  + A toast when an activity is started (toasts can be disabled in options)
+  + Fixed text area on top/bottom of each activity? (Also possible to disable)
+  + ...   
+  Suggestions:
+  - User menu key -> Options to configure this app 
+  - You can disable help messages in the Options menu
+  - Tap anywhere in ShowCountDownActivity to pause/continue, not just on the
+    button
+  - Canceling a timer is effectively a reset
+  - Double tap a wheel to reset it to zero
+
+* Long tap a wheel to reset it to zero
+* Nicer visualization for ShowAlarm activity (ringing bell or something similar)
+
+* StartupActivity does not really need to connect to the service, does it?
+
+* New app name (including codecentric branding?)
+* New package name (including codecentric...)
+* [BUG] When changing used time fields from set timer acitivity, the timer is resetted
+  to the last timer that was actually started. It would be nicer to keep the current
+  value (adapted to missing fields)
+
+* Unit Tests(!!), Integration tests, UATs. 
+  See http://developer.android.com/guide/topics/testing/testing_android.html
+  - http://pivotal.github.com/robolectric/index.html - Enabling decent unit tests/TDD on Android
+  - http://code.google.com/p/robotium/               - Black box testing framework
+  - http://code.google.com/p/android-mock/           - Mocking framework (based on EasyMock 2.4)
+  - http://daverog.wordpress.com/2009/12/14/why-android-isnt-ready-for-tdd-and-how-i-tried-anyway/
+    (approach with second non-Android project to use for testing)
+
+* Select alarm sound from:
+  + Phone alarm tones and ringtones
+  + Custom MP3 file
+
+* Configure multiple timers and save them
+
+* Configure warning sounds when x minutes/seconds are left
+
+* ? Reset button: I don't think we need one - when returning to SetTimerActivity,
+  the time the user entered is there implicitly
+
+* Publish to google code/github or similar. License?
+* Publish to market - ask Andreas/marketing if its okay, also with regard to codecentric branding etc. and who's the publisher
+
+* Test all possible workflows in all three activities:
+  - Home button, then start app again:
+    + SetTimerActivity: Should keep configured time
+    + ShowCountdownActivity: Countdown should have continued while app was in
+      background
+    + ShowAlarm: Should stop alarm, on restart it should return to
+      SetTimerActivity
+  - Back button, then start app again
+    + SetTimerActivity: Should keep configured time
+    + ShowCountdownActivity: Countdown should have stopped on back button, on
+      restart it should return to SetTimerActivity
+    + ShowAlarm: Should stop alarm, on restart it should return to
+      SetTimerActivity
+  - Rotate phone (calls onCreate(), that's why it is important to test it)
+    + SetTimerActivity: Should keep configured time
+    + ShowCountdownActivity: Countdown should continued 
+    + ShowAlarm: Beeping should continue
+
+* Third alternative for countdown visualization: something like an analog clock
+  with three hands (hours, minutes, seconds), but only show hands that are
+  used.
+
+
+== RELEASE NOTES ==
+
+= 2012-04-?? =
+* [BUG] Button label Pause/Continue is set to "Pause" when device is rotated,
+  even if state is PAUSED and label should be "Continue"
+* [FEATURE] Persist last manually entered time for countdown in
+  SetTimerActivity when starting countdown and read this on app startup
+  and use it instead of default time 
+* Set default time to 15 minutes
+* codecentric branding! (Background image)
+* [FEATURE] Nicer input to set time (like HTC timer input - slot machine reel):
+* [FEATURE] Hide hour input fields by default
+* [FEATURE] Configure, which time parts are shown/used (Enable/disable each of hour,
+  minute, second)
+
+= 2012-05-14 =
+* [FEATURE] Hide unused ( = 00 ) TextViews in ShowCountdownActivity, when all
+  fields of larger magnitude are also hidden/00.
+* Wheels should run the other way round. Or make that configurable.
+* Wheels should display numbers below ten with two digits/leading zero.
+* Show countdown activity should not format numbers below ten with two digits/
+  leading zeroes, when larger fields are hidden. 
+* !!! Service should start alarm sound, SoundGizmo should be a collaborator of service,
+  not of ShowAlarmActivity !!
+* Refactor navigation/onAfterServiceConnected:
+  Subclasses tell superclass which states they handle themselves and which not
+  For not-handled states, navigation occurs. For handled states, control is delegated
+  to subclass.
+* Put a persisten notification in the notificationbar when alarm is ringing. This links to
+our app/ShowAlarmActivity. It will be removed when alarm is stopped.
+* Introduce new StartupActivity
+* [FEATURE] Configure, which activity is used to set the timer, SetTimerTextFields
+  or SetTimerWheels - and save value to preferences. 
+  - Use StartupActivity to delegate to the correct SetTimer activity subclass
+* New app icon with branding
+* Pause countdown by tapping anywhere (except cancel button), resume on second tap 
+* Configure wheel direction
+* Change set timer method without restart 
+* option to keep the display on - prevent auto display off
+* Add pie chart to ShowCountdown 
+* Show fraction of remaining time as pie chart
+* Make ShowCountdown view configurable: Pie Chart & Time, Pie Chart only, Time only
+* Delay start alarm for CountdownService#UPDATE_INTERVALL to give
+  ShowCountdownActivity a chance to show zero (0 and empty pie chart)?
+* Touch anywhere also for ShowAlarm? Or make "Stop Alarm" button BIG!
