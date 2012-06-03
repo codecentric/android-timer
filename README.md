@@ -14,4 +14,4 @@ In detail, the app offers a few more features:
     * combine both of the above
 * Option to keep the display turned on during the whole countdown
 
-Currently, this app is not available on Google's Play Store, but you can download the latest version of it from the [download](https://github.com/codecentric/android-timer/downloads) section here at github. 
+Currently, this app is not available on Google's Play Store, but you can download the [latest version](https://github.com/downloads/codecentric/android-timer/android-timer.apk) of it from the [download section](https://github.com/codecentric/android-timer/downloads) section here at github. 
