@@ -1,0 +1,8 @@
+This folder contains unit tests for the android timer app, based on the 
+robolectric project (http://pivotal.github.com/robolectric/index.html). 
+
+This folder resides in the project android-timer but is also referenced as a
+linked resource in the project android-timer-test. The content of this folder
+should only be edited through the project android-timer-test, never through
+android-timer. See
+http://pivotal.github.com/robolectric/eclipse-quick-start.html.

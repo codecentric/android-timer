@@ -19,4 +19,27 @@ Currently, this app is not available on Google's Play Store, but you can downloa
 Contributing
 ------------
 
-Check the file android-timer/README.txt.
+To work on this project, you need to have Eclipse and the Android Development
+Toolkit installed. You also need to have cloned the full repository from github
+(git@github.com:codecentric/android-timer.git, see
+https://github.com/codecentric/android-timer).
+
+This includes three projects:
+* android-timer
+* android-timer-test
+* wheel
+
+All three projects need to be imported into your Eclipse workspace.
+.poject and .classpath files are provided.
+
+Some class path variables need to be set up:
+
+* JUnit-Library (standard Eclipse variable, should be pre-configured)
+* ANDROID_SDK
+    * should point to the root directory of your android SDK
+    * needs to contain platform level 7
+* ROBOLECTRIC
+    * should point to a directory where the robolectric jars reside
+    * needs to contain files named 
+        * robolectric-1.2-SNAPSHOT-jar-with-dependencies.jar
+	* robolectric-1.2-SNAPSHOT-sources.jar
