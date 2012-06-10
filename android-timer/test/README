@@ -1,0 +1,7 @@
+This project contains unit tests for the android timer app, based on the 
+robolectric project (http://pivotal.github.com/robolectric/index.html). 
+
+The actual test sources reside in the folder test in the project android-timer
+which is referenced in this project as a linked resource in this project.
+
+To run all tests, use the launch configuration provided in the directory .launch 
