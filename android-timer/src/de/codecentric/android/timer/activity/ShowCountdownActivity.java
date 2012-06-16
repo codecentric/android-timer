@@ -162,7 +162,7 @@ public class ShowCountdownActivity extends CountdownServiceClient {
 				this.getPreferencesKeysValues().defaultValueTapAnywhereToPause);
 	}
 
-	private void configureView() {
+	void configureView() {
 		this.configurePieChart();
 		this.configureTextViews();
 		this.configureButtons();

@@ -14,7 +14,7 @@ import com.xtremelabs.robolectric.RobolectricTestRunner;
 import de.codecentric.android.timer.R;
 
 /**
- * Test class for StartupActivity.
+ * Test class for {@link StartupActivity}.
  * 
  * @author Bastian Krol
  */
