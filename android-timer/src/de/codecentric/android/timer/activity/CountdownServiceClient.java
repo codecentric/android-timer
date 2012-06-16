@@ -268,14 +268,15 @@ abstract class CountdownServiceClient extends Activity {
 			super.bindService(this.serviceIntent, this.serviceConnection, 0);
 			Log.d(this.getTag(), "has been called: bindService");
 		} else {
-			// This else-branch probably never executed on the device, because
-			// the service is always unbound in onPause, it is never already
-			// bound when startAndBindCountdownService() is called in
-			// onResume(). It is executed in the unit tests, though, because the
-			// service mock is already injected when onResume is called.
-			// As a side effect, it is neccessary that all view object which
-			// might used in handleState (for example) are already initialized
-			// before onResume is called (that is, in onCreate).
+			// This else-branch is probably never executed on the device,
+			// because the service is always unbound in onPause, so it is never
+			// already bound when startAndBindCountdownService() is called in
+			// onResume(). This branch is executed in the unit tests, though,
+			// because the service mock is already injected when onResume is
+			// called, thus, isServiceBound() returns true. As a side effect, it
+			// is neccessary that all view objects which might be used in
+			// handleState (for example) are already initialized before onResume
+			// is called (that is, in onCreate).
 			Log.d(this.getTag(),
 					"service already bound in bindService(), will not bind again");
 			this.onAfterServiceConnected(this.getCountdownService().getState());
