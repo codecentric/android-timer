@@ -3,11 +3,15 @@
 == Project Setup == 
 
 To work on this project, you need to have Eclipse and the Android Development
-Toolkit installed. You also need to have cloned the full repository from github
-(git@github.com:codecentric/android-timer.git, see https://github.com/codecentric/android-timer)
-including this project (android-timer) and the supporting project named "wheel".
-Both projects also need to be imported into your Eclipse workspace as Android
-projects. 
+Toolkit installed. You also need to have cloned the full repository from
+github (git@github.com:codecentric/android-timer.git, see
+https://github.com/codecentric/android-timer) including this project
+(android-timer) and the supporting project named "wheel". Finally, there is a
+project called "timer-countdown-robolectric" which is used to run the
+robolectric unit tests for this project. All three projects need to be imported
+into your Eclipse workspace as Android projects. For more details regarding the
+project setup, refer to the section Contributing in the file README.md in the
+parent directory of the git repository. 
 
 == How to use notification sounds and ringtones in the Android emulator ==
 
