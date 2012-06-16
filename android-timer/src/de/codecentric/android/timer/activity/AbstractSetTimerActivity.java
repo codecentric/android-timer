@@ -40,6 +40,7 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 		Log.d(this.getTag(), "onCreate [AbstractSetTimerActivity]");
 		super.onCreate(savedInstanceState);
 		super.setContentView(this.getViewId());
+		this.fetchViewObjects();
 		this.configureButtons();
 	}
 
@@ -52,6 +53,14 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 		this.refreshView();
 		super.onResume();
 	}
+
+	private void fetchViewObjects() {
+		this.buttonStart = (Button) this.findViewById(R.id.buttonStart);
+		this.buttonClose = (Button) this.findViewById(R.id.buttonClose);
+		this.fetchViewObjectsForTimeInputControls();
+	}
+
+	protected abstract void fetchViewObjectsForTimeInputControls();
 
 	private void checkIfCorrectClassIsUsed(SharedPreferences preferences) {
 		Log.d(this.getTag(), "checkIfCorrectClassIsUsed");
@@ -107,7 +116,6 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 	}
 
 	private void configureButtonStart() {
-		this.buttonStart = (Button) this.findViewById(R.id.buttonStart);
 		this.buttonStart.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {
@@ -117,7 +125,6 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 	}
 
 	private void configureButtonClose() {
-		this.buttonClose = (Button) this.findViewById(R.id.buttonClose);
 		this.buttonClose.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {

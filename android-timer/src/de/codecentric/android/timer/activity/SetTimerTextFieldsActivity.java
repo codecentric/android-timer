@@ -26,20 +26,24 @@ public class SetTimerTextFieldsActivity extends AbstractSetTimerActivity {
 	}
 
 	@Override
+	protected void fetchViewObjectsForTimeInputControls() {
+		this.editTextHours = (EditText) findViewById(R.id.editTextHours);
+		this.editTextMinutes = (EditText) findViewById(R.id.editTextMinutes);
+		this.editTextSeconds = (EditText) findViewById(R.id.editTextSeconds);
+		this.timeDisplay = new TimeDisplayHelper(this.editTextHours,
+				this.editTextMinutes, this.editTextSeconds);
+	}
+
+	@Override
 	protected void configureTimeInputControls() {
 		this.configureEditTextFields();
 		this.configurePlusMinusButtons();
 	}
 
 	private void configureEditTextFields() {
-		this.editTextHours = (EditText) findViewById(R.id.editTextHours);
 		this.configureFocusListener(this.editTextHours, TimePartType.HOUR);
-		this.editTextMinutes = (EditText) findViewById(R.id.editTextMinutes);
 		this.configureFocusListener(this.editTextMinutes, TimePartType.MINUTE);
-		this.editTextSeconds = (EditText) findViewById(R.id.editTextSeconds);
 		this.configureFocusListener(this.editTextSeconds, TimePartType.SECOND);
-		this.timeDisplay = new TimeDisplayHelper(this.editTextHours,
-				this.editTextMinutes, this.editTextSeconds);
 	}
 
 	private void configureFocusListener(final EditText editText,

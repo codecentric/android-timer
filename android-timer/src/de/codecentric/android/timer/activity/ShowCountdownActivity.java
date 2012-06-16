@@ -63,6 +63,7 @@ public class ShowCountdownActivity extends CountdownServiceClient {
 		Log.d(TAG, "onCreate(Bundle)");
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.show_countdown);
+		this.fetchViewObjects();
 	}
 
 	@Override
@@ -120,6 +121,26 @@ public class ShowCountdownActivity extends CountdownServiceClient {
 		super.onStop();
 	}
 
+	private void fetchViewObjects() {
+		this.pieChart = (PieChartView) super.findViewById(R.id.pieChart);
+		this.textViewHours = (TextView) super.findViewById(R.id.textViewHours);
+		this.textViewColonHoursMinutes = (TextView) super
+				.findViewById(R.id.textViewColon1);
+		this.textViewMinutes = (TextView) super
+				.findViewById(R.id.textViewMinutes);
+		this.textViewColonMinutesSeconds = (TextView) super
+				.findViewById(R.id.textViewColon2);
+		this.textViewSeconds = (TextView) super
+				.findViewById(R.id.textViewSeconds);
+		this.timeDisplay = new TimeDisplayHelper(this.textViewHours,
+				this.textViewMinutes, this.textViewSeconds, true);
+		this.textViewPaused = (TextView) super
+				.findViewById(R.id.textViewPaused);
+		this.buttonPauseContinueStopAlarm = (Button) super
+				.findViewById(R.id.buttonPauseContinueStopAlarm);
+		this.buttonCancel = (Button) this.findViewById(R.id.buttonCancel);
+	}
+
 	private void loadPreferences() {
 		Log.d(this.getTag(), "loadPreferences()");
 		SharedPreferences preferences = PreferenceManager
@@ -170,7 +191,6 @@ public class ShowCountdownActivity extends CountdownServiceClient {
 
 	private void configurePieChart() {
 		Log.d(TAG, "configurePieChart");
-		this.pieChart = (PieChartView) super.findViewById(R.id.pieChart);
 		if (this.showPieChart) {
 			this.pieChart.setVisibility(View.VISIBLE);
 		} else {
@@ -180,20 +200,6 @@ public class ShowCountdownActivity extends CountdownServiceClient {
 
 	private void configureTextViews() {
 		Log.d(TAG, "configureTextViews()");
-		this.textViewHours = (TextView) super.findViewById(R.id.textViewHours);
-		this.textViewColonHoursMinutes = (TextView) super
-				.findViewById(R.id.textViewColon1);
-		this.textViewMinutes = (TextView) super
-				.findViewById(R.id.textViewMinutes);
-		this.textViewColonMinutesSeconds = (TextView) super
-				.findViewById(R.id.textViewColon2);
-		this.textViewSeconds = (TextView) super
-				.findViewById(R.id.textViewSeconds);
-		this.timeDisplay = new TimeDisplayHelper(this.textViewHours,
-				this.textViewMinutes, this.textViewSeconds, true);
-		this.textViewPaused = (TextView) super
-				.findViewById(R.id.textViewPaused);
-
 		int visibility = this.showText ? View.VISIBLE : View.GONE;
 		this.textViewHours.setVisibility(visibility);
 		this.textViewColonHoursMinutes.setVisibility(visibility);
@@ -209,8 +215,6 @@ public class ShowCountdownActivity extends CountdownServiceClient {
 	}
 
 	private void configureButtonPauseContinueStopAlarm() {
-		this.buttonPauseContinueStopAlarm = (Button) super
-				.findViewById(R.id.buttonPauseContinueStopAlarm);
 		View wholeScreen = super.findViewById(R.id.showCountdownActivity);
 		View viewToClickForPauseAndContinue;
 		if (!this.tapAnywhereToPause) {
@@ -232,7 +236,6 @@ public class ShowCountdownActivity extends CountdownServiceClient {
 	}
 
 	private void configureButtonCancel() {
-		this.buttonCancel = (Button) this.findViewById(R.id.buttonCancel);
 		this.buttonCancel.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View view) {

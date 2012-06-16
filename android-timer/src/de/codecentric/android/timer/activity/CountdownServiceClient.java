@@ -268,15 +268,14 @@ abstract class CountdownServiceClient extends Activity {
 			super.bindService(this.serviceIntent, this.serviceConnection, 0);
 			Log.d(this.getTag(), "has been called: bindService");
 		} else {
-			
-			TODO This else branch is problematic in tests - it implicitly calls
-			handleState on the activity although onResume has not yet finished,
-			on the other hand, some activities use onResume to populate the view
-			elements. So, when this path is executed, some of the view elements
-			that are used in handleState are still null. This stuff is probably
-			never executed on the device or emulator?
-			
-			
+			// This else-branch probably never executed on the device, because
+			// the service is always unbound in onPause, it is never already
+			// bound when startAndBindCountdownService() is called in
+			// onResume(). It is executed in the unit tests, though, because the
+			// service mock is already injected when onResume is called.
+			// As a side effect, it is neccessary that all view object which
+			// might used in handleState (for example) are already initialized
+			// before onResume is called (that is, in onCreate).
 			Log.d(this.getTag(),
 					"service already bound in bindService(), will not bind again");
 			this.onAfterServiceConnected(this.getCountdownService().getState());

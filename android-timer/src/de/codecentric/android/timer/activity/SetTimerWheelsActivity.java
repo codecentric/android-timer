@@ -47,6 +47,16 @@ public class SetTimerWheelsActivity extends AbstractSetTimerActivity {
 	}
 
 	@Override
+	protected void fetchViewObjectsForTimeInputControls() {
+		this.buttonResetHours = (Button) super
+				.findViewById(R.id.buttonResetHours);
+		this.buttonResetMinutes = (Button) super
+				.findViewById(R.id.buttonResetMinutes);
+		this.buttonResetSeconds = (Button) super
+				.findViewById(R.id.buttonResetSeconds);
+	}
+
+	@Override
 	protected void configureTimeInputControls() {
 		this.configureWheels();
 		this.configureResetButtons();
@@ -89,12 +99,6 @@ public class SetTimerWheelsActivity extends AbstractSetTimerActivity {
 	}
 
 	private void configureResetButtons() {
-		this.buttonResetHours = (Button) super
-				.findViewById(R.id.buttonResetHours);
-		this.buttonResetMinutes = (Button) super
-				.findViewById(R.id.buttonResetMinutes);
-		this.buttonResetSeconds = (Button) super
-				.findViewById(R.id.buttonResetSeconds);
 		this.configureResetButton(this.buttonResetHours, this.wheelHours,
 				this.wheelAdapterHours);
 		this.configureResetButton(this.buttonResetMinutes, this.wheelMinutes,
