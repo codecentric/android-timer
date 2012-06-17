@@ -30,12 +30,13 @@ public abstract class AbstractCountdownServiceClientTest<T extends CountdownServ
 	public void before() {
 		MockitoAnnotations.initMocks(this);
 
-		// Weird: when using mockito annotation @InjectMocks, the
-		// robolectric magic does not seem to work correctly anymore and we get
-		// a NPE during activity.onCreate in the constructor of
-		// PreferencesKeysValues at the first call to
-		// context.getResources().getXxx
-		// When we set up the mocks manually, this seems to work
+		// Weird: when using the mockito annotation @InjectMocks on the
+		// activity, the robolectric magic does not seem to work correctly
+		// anymore and we get a NPE during activity.onCreate in the constructor
+		// of PreferencesKeysValues at the first call to
+		// context.getResources().getXxx. This problem might be caused by a
+		// different order of creating the activity instance and the robolectric
+		// runner setting up things.
 
 		this.activity = createActivityInstance();
 		this.doAdditionalMockingBeforeOnCreate();
