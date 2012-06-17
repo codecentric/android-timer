@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="src" output="bin/classes-test" path="src-test"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="var" path="JUnit-Library" sourcepath="/JUnit-src" />
+	<classpathentry kind="var" path="JUnit-Library" sourcepath="/JUnit-src"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
