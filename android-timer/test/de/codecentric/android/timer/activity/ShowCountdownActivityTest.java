@@ -7,6 +7,7 @@ import static org.mockito.Mockito.*;
 import org.hamcrest.Matchers;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
@@ -21,6 +22,7 @@ import de.codecentric.android.timer.service.ServiceState;
 public class ShowCountdownActivityTest extends
 		AbstractCountdownServiceClientTest<ShowCountdownActivity> {
 
+	@Mock
 	private TimeDisplayHelper timeDisplayHelper;
 
 	@Override
@@ -35,8 +37,7 @@ public class ShowCountdownActivityTest extends
 
 	@Override
 	protected void doAdditionalMockingBeforeOnResume() {
-		this.timeDisplayHelper = this.mockCollaborator(TimeDisplayHelper.class,
-				"timeDisplay");
+		this.mockCollaborator(this.timeDisplayHelper, "timeDisplay");
 	}
 
 	@Test

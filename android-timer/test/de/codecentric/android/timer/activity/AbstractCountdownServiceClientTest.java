@@ -4,6 +4,8 @@ import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.mockito.internal.util.reflection.Whitebox;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
@@ -21,12 +23,14 @@ public abstract class AbstractCountdownServiceClientTest<T extends CountdownServ
 
 	protected T activity;
 
+	@Mock
 	protected CountdownService countdownService;
 
 	@Before
 	public void before() {
+		MockitoAnnotations.initMocks(this);
 
-		// Weird: when using mockito annotations (@Mock & @InjectMocks), the
+		// Weird: when using mockito annotation @InjectMocks, the
 		// robolectric magic does not seem to work correctly anymore and we get
 		// a NPE during activity.onCreate in the constructor of
 		// PreferencesKeysValues at the first call to
@@ -51,17 +55,15 @@ public abstract class AbstractCountdownServiceClientTest<T extends CountdownServ
 	}
 
 	private void mockCountdownService() {
-		this.countdownService = this.mockCollaborator(CountdownService.class,
-				"countdownService");
+		this.mockCollaborator(this.countdownService, "countdownService");
 		when(this.countdownService.getState()).thenReturn(
 				this.getCurrentServiceState());
 	}
 
-	protected <C> C mockCollaborator(Class<C> collaboratorClass,
+	protected <C> void mockCollaborator(C collaboratorMock,
 			String collaboratorName) {
-		C collaborator = mock(collaboratorClass);
-		Whitebox.setInternalState(this.activity, collaboratorName, collaborator);
-		return collaborator;
+		Whitebox.setInternalState(this.activity, collaboratorName,
+				collaboratorMock);
 	}
 
 	protected abstract T createActivityInstance();
