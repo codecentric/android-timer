@@ -19,9 +19,9 @@ import de.codecentric.android.timer.service.ServiceState;
 @RunWith(RobolectricTestRunner.class)
 public abstract class AbstractCountdownServiceClientTest<T extends CountdownServiceClient> {
 
-	private CountdownService countdownService;
-
 	protected T activity;
+
+	protected CountdownService countdownService;
 
 	@Before
 	public void before() {
