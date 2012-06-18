@@ -1,6 +1,6 @@
 package de.codecentric.android.timer.service;
 
-import static de.codecentric.android.timer.ServiceStateIteration.*;
+import static de.codecentric.android.timer.ServiceStateIterator.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -17,7 +17,7 @@ import android.os.IBinder;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
-import de.codecentric.android.timer.ActionInState;
+import de.codecentric.android.timer.ActionForServiceState;
 
 @RunWith(RobolectricTestRunner.class)
 public class CountdownServiceTest {
@@ -72,9 +72,9 @@ public class CountdownServiceTest {
 
 	@Test
 	public void shouldThrowWhenCountdownIsStartedInWrongState() {
-		forAllStatesExcept(ServiceState.WAITING, new ActionInState() {
+		forAllServiceStatesExcept(ServiceState.WAITING, new ActionForServiceState() {
 			@Override
-			public void doWithState(ServiceState serviceState) {
+			public void execute(ServiceState serviceState) {
 				try {
 					setServiceState(serviceState);
 					countdownService.startCountdown(ONE_SECOND);
@@ -105,9 +105,9 @@ public class CountdownServiceTest {
 
 	@Test
 	public void shouldThrowWhenCountdownIsPausedInWrongState() {
-		forAllStatesExcept(ServiceState.COUNTING_DOWN, new ActionInState() {
+		forAllServiceStatesExcept(ServiceState.COUNTING_DOWN, new ActionForServiceState() {
 			@Override
-			public void doWithState(ServiceState serviceState) {
+			public void execute(ServiceState serviceState) {
 				try {
 					setServiceState(serviceState);
 					countdownService.pauseCountdown();
@@ -135,9 +135,9 @@ public class CountdownServiceTest {
 
 	@Test
 	public void shouldThrowWhenCountdownIsContinuedInWrongState() {
-		forAllStatesExcept(ServiceState.PAUSED, new ActionInState() {
+		forAllServiceStatesExcept(ServiceState.PAUSED, new ActionForServiceState() {
 			@Override
-			public void doWithState(ServiceState serviceState) {
+			public void execute(ServiceState serviceState) {
 				try {
 					setServiceState(serviceState);
 					countdownService.continueCountdown();
