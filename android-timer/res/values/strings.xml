@@ -29,6 +29,10 @@
     <string name="show_alarm_times">Time\'s</string>
     <string name="show_alarm_up">up!</string>
     <string name="show_alarm_stop_alarm">Stop Alarm</string>
+    
+    <string name="notification_alarm_ticker_text">Time\'s up</string>
+	<string name="notification_alarm_title">Time\'s up</string>
+	<string name="notification_alarm_text">The countdown timer has reached zero.</string>
 
     <!-- preferences activity -->
     <string name="preferences_title">Preferences</string>

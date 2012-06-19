@@ -38,9 +38,6 @@ public class CountdownService extends Service {
 
 	static final int ALARM_NOTIFICATION_ID = 1;
 
-	private static final String NOTIFICATION_TICKER_TEXT = "Time's up";
-	private static final String NOTIFICATION_TITLE = "Time's up";
-	private static final String NOTIFICATION_TEXT = "The countdown timer has reached zero.";
 	private static final BigDecimal THOUSAND = new BigDecimal(1000);
 
 	private IBinder countdownServiceBinder;
@@ -333,13 +330,16 @@ public class CountdownService extends Service {
 	private void addStatusBarNotification() {
 		Log.d(TAG, "addStatusBarNotification()");
 		int icon = R.drawable.ic_stat_notify_alarm_ringing;
-		CharSequence tickerText = NOTIFICATION_TICKER_TEXT;
+		CharSequence tickerText = super
+				.getString(R.string.notification_alarm_ticker_text);
 		long when = System.currentTimeMillis();
 		Notification notification = new Notification(icon, tickerText, when);
 
 		Context context = getApplicationContext();
-		CharSequence contentTitle = NOTIFICATION_TITLE;
-		CharSequence contentText = NOTIFICATION_TEXT;
+		CharSequence contentTitle = super
+				.getString(R.string.notification_alarm_title);
+		CharSequence contentText = super
+				.getString(R.string.notification_alarm_text);
 		Intent notificationIntent = new Intent(this, ShowAlarmActivity.class);
 		PendingIntent contentIntent = PendingIntent.getActivity(this, 0,
 				notificationIntent, 0);
