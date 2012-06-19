@@ -30,14 +30,13 @@ import de.codecentric.android.timer.activity.ShowAlarmActivity;
  */
 public class CountdownService extends Service {
 
-	private static final String TAG = CountdownService.class.getName();
+	static final String TAG = CountdownService.class.getName();
 
 	static final int COUNTDOWN_TICK_INTERVALL = 300;
 	static final int DELAY_TIME = COUNTDOWN_TICK_INTERVALL / 2;
-
 	public static final int GUI_UPDATE_INTERVALL = COUNTDOWN_TICK_INTERVALL / 4;
 
-	private static final int ALARM_NOTIFICATION_ID = 1;
+	static final int ALARM_NOTIFICATION_ID = 1;
 
 	private static final String NOTIFICATION_TICKER_TEXT = "Time's up";
 	private static final String NOTIFICATION_TITLE = "Time's up";

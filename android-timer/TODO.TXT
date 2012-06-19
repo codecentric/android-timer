@@ -10,7 +10,14 @@
 
 ==IN PROGRESS==
 
+* Unit Tests - in progress (with robolectric)
+
 ==TODO==
+
+* Migrate app to roboguice (dependency injection for Android) to increase
+  testability. Robolectric claims to work nicely with roboguice.
+  http://code.google.com/p/roboguice/
+  http://pivotal.github.com/robolectric/roboguice.html
 
 === FEATURES NEEDED BEFORE PUBLISHING ON GOOGLE PLAY STORE ===
 
@@ -55,13 +62,9 @@
   to the last timer that was actually started. It would be nicer to keep the current
   value (adapted to missing fields)
 
-* Unit Tests(!!), Integration tests, UATs. 
+* Integration tests and/or UATs
   See http://developer.android.com/guide/topics/testing/testing_android.html
-  - http://pivotal.github.com/robolectric/index.html - Enabling decent unit tests/TDD on Android
   - http://code.google.com/p/robotium/               - Black box testing framework
-  - http://code.google.com/p/android-mock/           - Mocking framework (based on EasyMock 2.4)
-  - http://daverog.wordpress.com/2009/12/14/why-android-isnt-ready-for-tdd-and-how-i-tried-anyway/
-    (approach with second non-Android project to use for testing)
 
 * Configure warning sounds when x minutes/seconds are left
 
@@ -89,7 +92,6 @@
 * Third alternative for countdown visualization: something like an analog clock
   with three hands (hours, minutes, seconds), but only show hands that are
   used.
-
 
 == RELEASE NOTES ==
 
