@@ -160,13 +160,6 @@ public class CountdownServiceTest {
 				});
 	}
 
-	// TODO test countdownTimer#onTick
-
-	// TODO test onCountdownTimerFinish()/countdownTimer#onFinish (should start
-	// startDelayAlarmTimer)
-
-	// TODO test startDelayAlarmTimer#onDelayTimerFinish
-
 	@Test
 	public void shouldStopAlarmSound() {
 		// given a service instance in state BEEPING
@@ -201,6 +194,20 @@ public class CountdownServiceTest {
 					}
 				});
 	}
+
+	// TODO stopCountdown
+
+	// TODO resetToWaiting
+
+	// TODO exit
+
+	// TODO stopService
+
+	// TODO getRemainingFractionRoundedUpToFullSeconds (with initial and
+	// remaining milliseconds set through Whitebox
+
+	// TODO Start a countdown, wait, check that getRemainingMilliseconds is less
+	// than the initial value
 
 	private void setServiceState(ServiceState serviceState) {
 		Whitebox.setInternalState(this.countdownService, "serviceState",
