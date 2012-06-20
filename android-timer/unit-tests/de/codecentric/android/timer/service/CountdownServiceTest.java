@@ -102,7 +102,7 @@ public class CountdownServiceTest {
 		this.setServiceState(ServiceState.COUNTING_DOWN);
 		this.setCountdownTimer(this.countDownTimer);
 
-		// when countdown is pause
+		// when countdown is paused
 		this.countdownService.pauseCountdown();
 
 		// then state is set to PAUSED
@@ -174,7 +174,7 @@ public class CountdownServiceTest {
 		// and notification is removed
 		verify(this.notificationManager).cancel(CountdownService.TAG,
 				CountdownService.ALARM_NOTIFICATION_ID);
-		// and state if FINISHED
+		// and state is FINISHED
 		assertTrue(this.countdownService.isFinished());
 	}
 
@@ -195,19 +195,78 @@ public class CountdownServiceTest {
 				});
 	}
 
-	// TODO stopCountdown
+	@Test
+	public void shouldStopCountdown() {
+		// given a service instance in state COUNTING_DOWN
+		this.setServiceState(ServiceState.COUNTING_DOWN);
+		this.setCountdownTimer(this.countDownTimer);
+		this.setSoundGizmo(this.soundGizmo);
 
-	// TODO resetToWaiting
+		// when countdown is stopped
+		this.countdownService.stopCountdown();
 
-	// TODO exit
+		// then countdown timer is cancelled
+		verify(this.countDownTimer).cancel();
+		// and sound is cancelled
+		verify(this.soundGizmo).stopAlarm();
+		// and state is set to FINISHED
+		assertTrue(this.countdownService.isFinished());
 
-	// TODO stopService
+	}
+
+	@Test
+	public void shouldResetToWaiting() {
+		// given a service instance in state FINISHED
+		this.setServiceState(ServiceState.FINISHED);
+
+		// when countdown service is reset to state waiting
+		this.countdownService.resetToWaiting();
+
+		// then internal time values are reset
+		assertNull(Whitebox.getInternalState(this.countdownService,
+				"initialSecondsRoundedUp"));
+		assertThat((Long) Whitebox.getInternalState(this.countdownService,
+				"remainingMilliseconds"), is(equalTo(Long.MAX_VALUE)));
+		// and state is set to WAITING
+		assertTrue(this.countdownService.isWaiting());
+
+	}
+
+	@Test
+	public void shouldThrowWhenResetToWaitingInWrongState() {
+		forAllServiceStatesExcept(ServiceState.FINISHED,
+				new ActionForServiceState() {
+					@Override
+					public void execute(ServiceState serviceState) {
+						try {
+							setServiceState(serviceState);
+							countdownService.resetToWaiting();
+							fail("Should have thrown exception");
+						} catch (IllegalStateException e) {
+							// expected
+						}
+					}
+				});
+	}
+
+	@Test
+	public void shouldExit() {
+		// given a service instance in state COUNTING_DOWN
+		this.setServiceState(ServiceState.COUNTING_DOWN);
+		this.setCountdownTimer(this.countDownTimer);
+
+		// when the user wants to exit the application completely
+		this.countdownService.exit();
+
+		// then countdown timer is cancelled
+		verify(this.countDownTimer).cancel();
+		// and state is set to WAITING
+		assertTrue(this.countdownService.isExit());
+
+	}
 
 	// TODO getRemainingFractionRoundedUpToFullSeconds (with initial and
 	// remaining milliseconds set through Whitebox
-
-	// TODO Start a countdown, wait, check that getRemainingMilliseconds is less
-	// than the initial value
 
 	private void setServiceState(ServiceState serviceState) {
 		Whitebox.setInternalState(this.countdownService, "serviceState",

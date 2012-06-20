@@ -249,6 +249,14 @@ public class CountdownService extends Service {
 	}
 
 	/**
+	 * @return {@code true} if and only if the current state is
+	 *         {@link ServiceState#EXIT}
+	 */
+	public boolean isExit() {
+		return this.serviceState == ServiceState.EXIT;
+	}
+
+	/**
 	 * @return the current state
 	 */
 	public ServiceState getState() {
