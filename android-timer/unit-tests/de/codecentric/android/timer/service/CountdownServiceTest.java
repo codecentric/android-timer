@@ -6,6 +6,8 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.*;
 
+import java.math.BigDecimal;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -265,8 +267,49 @@ public class CountdownServiceTest {
 
 	}
 
-	// TODO getRemainingFractionRoundedUpToFullSeconds (with initial and
-	// remaining milliseconds set through Whitebox
+	@Test
+	public void shouldReturn0AsRemainingFractionIfInitialMillisIsNull() {
+		setRemainingFractionInput(null, 5000L);
+		assertThat(
+				this.countdownService
+						.getRemainingFractionRoundedUpToFullSeconds(),
+				is(equalTo(0f)));
+	}
+
+	@Test
+	public void shouldReturn0AsRemainingFractionIfInitialMillisIsZero() {
+		setRemainingFractionInput(BigDecimal.ZERO, 5000L);
+		assertThat(
+				this.countdownService
+						.getRemainingFractionRoundedUpToFullSeconds(),
+				is(equalTo(0f)));
+	}
+
+	@Test
+	public void shouldReturnRemainingFraction() {
+		setRemainingFractionInput(BigDecimal.TEN, 5000L);
+		assertThat(
+				this.countdownService
+						.getRemainingFractionRoundedUpToFullSeconds(),
+				is(equalTo(0.5f)));
+	}
+
+	@Test
+	public void shouldReturnRemainingFractionRounded() {
+		setRemainingFractionInput(BigDecimal.TEN, 4001L);
+		assertThat(
+				this.countdownService
+						.getRemainingFractionRoundedUpToFullSeconds(),
+				is(equalTo(0.5f)));
+	}
+
+	// TODO Some whitebox testing by calling private methods to cover
+
+	// * running countdown (call onCountdownTimerTick) - check that remaining
+	// millis are reduced
+	// * onCountdownTimerFinish - check that delay timer is started
+	// * onDelayTimerFinish() - check that alarm sound is played and
+	// notification added and show alarm activity is started
 
 	private void setServiceState(ServiceState serviceState) {
 		Whitebox.setInternalState(this.countdownService, "serviceState",
@@ -293,4 +336,11 @@ public class CountdownServiceTest {
 				notificationManager);
 	}
 
+	private void setRemainingFractionInput(BigDecimal initialSecondsRoundUp,
+			long remainingMilliseconds) {
+		Whitebox.setInternalState(this.countdownService,
+				"initialSecondsRoundedUp", initialSecondsRoundUp);
+		Whitebox.setInternalState(this.countdownService,
+				"remainingMilliseconds", remainingMilliseconds);
+	}
 }

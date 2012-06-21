@@ -407,7 +407,8 @@ public class CountdownService extends Service {
 	 */
 	public float getRemainingFractionRoundedUpToFullSeconds() {
 		Log.d(TAG, "getRemainingFractionRoundedUpToFullSeconds()");
-		if (this.initialSecondsRoundedUp != null) {
+		if (this.initialSecondsRoundedUp != null
+				&& BigDecimal.ZERO.compareTo(this.initialSecondsRoundedUp) < 0) {
 			BigDecimal remainingSecondsRoundedUp = new BigDecimal(
 					this.remainingMilliseconds).divide(THOUSAND, 0,
 					RoundingMode.UP);
