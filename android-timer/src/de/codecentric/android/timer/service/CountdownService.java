@@ -47,8 +47,10 @@ public class CountdownService extends Service {
 	private BigDecimal initialSecondsRoundedUp;
 	private long remainingMilliseconds;
 
-	private SoundGizmo soundGizmo;
 	private NotificationManager notificationManager;
+
+	private SoundGizmo soundGizmo;
+	private boolean soundIsPlaying;
 
 	public CountdownService() {
 		super();
@@ -76,6 +78,8 @@ public class CountdownService extends Service {
 		this.remainingMilliseconds = Long.MAX_VALUE;
 		this.countdownServiceBinder = new CountdownServiceBinder(this);
 		this.getNotificationManager();
+		this.soundGizmo = new SoundGizmo();
+		this.soundIsPlaying = false;
 	}
 
 	private void getNotificationManager() {
@@ -332,7 +336,6 @@ public class CountdownService extends Service {
 		this.addStatusBarNotification();
 		this.ringAlarmSound();
 		this.startShowAlarmActivityFromService();
-
 	}
 
 	private void addStatusBarNotification() {
@@ -363,7 +366,7 @@ public class CountdownService extends Service {
 		this.notificationManager.cancel(TAG, ALARM_NOTIFICATION_ID);
 	}
 
-	private void startShowAlarmActivityFromService() {
+	void startShowAlarmActivityFromService() {
 		Log.d(TAG, "startShowAlarmActivity()");
 		Intent showAlarmIntent = new Intent(getBaseContext(),
 				ShowAlarmActivity.class);
@@ -373,21 +376,18 @@ public class CountdownService extends Service {
 
 	private void ringAlarmSound() {
 		Log.d(TAG, "ringAlarm()");
-		if (this.soundGizmo == null) {
+		if (!this.soundIsPlaying) {
 			Log.d(TAG, "starting new sound");
-			this.soundGizmo = new SoundGizmo();
 			this.soundGizmo.playAlarmSound(this);
 		} else {
-			Log.d(TAG, "sound should already be playing");
+			Log.e(TAG, "sound should already be playing");
 		}
 	}
 
 	private void cancelAlarmSound() {
 		Log.d(TAG, "stopBeeping()");
-		if (this.soundGizmo != null) {
-			this.soundGizmo.stopAlarm();
-		}
-		this.soundGizmo = null;
+		this.soundGizmo.stopAlarm();
+		this.soundIsPlaying = false;
 	}
 
 	public long getRemainingMilliseconds() {

@@ -3,8 +3,10 @@ package de.codecentric.android.timer.service;
 import static de.codecentric.android.timer.ServiceStateIterator.*;
 import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
+import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.*;
+import static org.mockito.internal.util.reflection.Whitebox.*;
 
 import java.math.BigDecimal;
 
@@ -12,21 +14,26 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
-import org.mockito.internal.util.reflection.Whitebox;
+import org.mockito.Spy;
 
+import android.app.Notification;
 import android.app.NotificationManager;
+import android.content.Context;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 import de.codecentric.android.timer.ActionForServiceState;
+import de.codecentric.android.timer.TimerWhitebox;
 
 @RunWith(RobolectricTestRunner.class)
 public class CountdownServiceTest {
 
-	private static final int ONE_SECOND = 1000;
+	private static final long ONE_SECOND = 1000L;
+	private static final long FIVE_SECONDS = 5000L;
 
+	@Spy
 	private CountdownService countdownService;
 
 	@Mock
@@ -40,10 +47,13 @@ public class CountdownServiceTest {
 
 	@Before
 	public void before() {
-		initMocks(this);
 		this.countdownService = new CountdownService();
+		initMocks(this);
 		this.countdownService.onCreate();
 		this.setNotificationManager(this.notificationManager);
+		this.setSoundGizmo(this.soundGizmo);
+		doNothing().when(this.countdownService)
+				.startShowAlarmActivityFromService();
 	}
 
 	@Test
@@ -166,7 +176,6 @@ public class CountdownServiceTest {
 	public void shouldStopAlarmSound() {
 		// given a service instance in state BEEPING
 		this.setServiceState(ServiceState.BEEPING);
-		this.setSoundGizmo(this.soundGizmo);
 
 		// when alarm sound is stopped
 		this.countdownService.stopAlarmSound();
@@ -202,7 +211,6 @@ public class CountdownServiceTest {
 		// given a service instance in state COUNTING_DOWN
 		this.setServiceState(ServiceState.COUNTING_DOWN);
 		this.setCountdownTimer(this.countDownTimer);
-		this.setSoundGizmo(this.soundGizmo);
 
 		// when countdown is stopped
 		this.countdownService.stopCountdown();
@@ -225,9 +233,9 @@ public class CountdownServiceTest {
 		this.countdownService.resetToWaiting();
 
 		// then internal time values are reset
-		assertNull(Whitebox.getInternalState(this.countdownService,
+		assertNull(getInternalState(this.countdownService,
 				"initialSecondsRoundedUp"));
-		assertThat((Long) Whitebox.getInternalState(this.countdownService,
+		assertThat((Long) TimerWhitebox.getInternalState(this.countdownService,
 				"remainingMilliseconds"), is(equalTo(Long.MAX_VALUE)));
 		// and state is set to WAITING
 		assertTrue(this.countdownService.isWaiting());
@@ -303,44 +311,90 @@ public class CountdownServiceTest {
 				is(equalTo(0.5f)));
 	}
 
-	// TODO Some whitebox testing by calling private methods to cover
+	@Test
+	public void shouldReduceRemainingMillisecondsOnTick() {
+		// given a started countdown with 5 seconds
+		this.setCountdownTimer(this.countDownTimer);
+		this.countdownService.startCountdown(FIVE_SECONDS);
 
-	// * running countdown (call onCountdownTimerTick) - check that remaining
-	// millis are reduced
-	// * onCountdownTimerFinish - check that delay timer is started
-	// * onDelayTimerFinish() - check that alarm sound is played and
-	// notification added and show alarm activity is started
+		// when the internal countDownTimer ticks
+		TimerWhitebox.callInternalMethod(this.countdownService,
+				"onCountdownTimerTick", new Object[] { 4950L },
+				new Class<?>[] { long.class });
+
+		// then remaining milliseconds should have been decreased
+		assertThat(this.countdownService.getRemainingMilliseconds(),
+				is(equalTo(4950L)));
+	}
+
+	@Test
+	public void shouldFinishCountdown() {
+		// when the internal countDownTimer finishes
+		TimerWhitebox.callInternalMethod(this.countdownService,
+				"onCountdownTimerFinish");
+
+		// then remaining milliseconds should be zero
+		assertThat(this.countdownService.getRemainingMilliseconds(),
+				is(equalTo(0L)));
+
+		// and the delay timer should have been started - but I have no clue how
+		// to test that :-( It's created internally in startDelayAlarmTimer
+	}
+
+	@Test
+	public void shouldStartAlarmWhenDelayTimerFinishes() {
+		// when the delay timer finishes and the alarm is finally to be kicked
+		// off
+		TimerWhitebox.callInternalMethod(this.countdownService,
+				"onDelayTimerFinish");
+
+		// then service should be in state BEEPING
+		assertTrue(this.countdownService.isBeeping());
+		// then notificaiton should be added to status bar
+		verify(notificationManager).notify(eq(CountdownService.TAG),
+				eq(CountdownService.ALARM_NOTIFICATION_ID),
+				(Notification) anyObject());
+		// the sound should be played
+		verify(this.getSoundGizmo()).playAlarmSound((Context) anyObject());
+		// then ShowAlarmActivity shouldBeStarted
+		verify(this.countdownService).startShowAlarmActivityFromService();
+	}
 
 	private void setServiceState(ServiceState serviceState) {
-		Whitebox.setInternalState(this.countdownService, "serviceState",
+		TimerWhitebox.setInternalState(this.countdownService, "serviceState",
 				serviceState);
 	}
 
 	private void setCountdownTimer(CountDownTimer countdownTimer) {
-		Whitebox.setInternalState(this.countdownService, "countdownTimer",
+		TimerWhitebox.setInternalState(this.countdownService, "countdownTimer",
 				countdownTimer);
 	}
 
 	private CountDownTimer getCountdownTimer() {
-		return (CountDownTimer) Whitebox.getInternalState(
+		return (CountDownTimer) TimerWhitebox.getInternalState(
 				this.countdownService, "countdownTimer");
 	}
 
 	private void setSoundGizmo(SoundGizmo soundGizmo) {
-		Whitebox.setInternalState(this.countdownService, "soundGizmo",
+		TimerWhitebox.setInternalState(this.countdownService, "soundGizmo",
 				soundGizmo);
 	}
 
+	private SoundGizmo getSoundGizmo() {
+		return (SoundGizmo) TimerWhitebox.getInternalState(
+				this.countdownService, "soundGizmo");
+	}
+
 	private void setNotificationManager(NotificationManager notificationManager) {
-		Whitebox.setInternalState(this.countdownService, "notificationManager",
-				notificationManager);
+		TimerWhitebox.setInternalState(this.countdownService,
+				"notificationManager", notificationManager);
 	}
 
 	private void setRemainingFractionInput(BigDecimal initialSecondsRoundUp,
 			long remainingMilliseconds) {
-		Whitebox.setInternalState(this.countdownService,
+		TimerWhitebox.setInternalState(this.countdownService,
 				"initialSecondsRoundedUp", initialSecondsRoundUp);
-		Whitebox.setInternalState(this.countdownService,
+		TimerWhitebox.setInternalState(this.countdownService,
 				"remainingMilliseconds", remainingMilliseconds);
 	}
 }
