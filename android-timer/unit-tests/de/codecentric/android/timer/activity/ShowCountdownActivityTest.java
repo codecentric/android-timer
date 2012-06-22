@@ -38,7 +38,7 @@ public class ShowCountdownActivityTest extends
 	}
 
 	@Override
-	protected void doAdditionalMockingBeforeOnResume() {
+	protected void injectAdditionalMocksBeforeOnResume() {
 		this.mockCollaborator(this.timeDisplayHelper, "timeDisplay");
 	}
 
