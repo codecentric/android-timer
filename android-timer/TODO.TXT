@@ -11,6 +11,10 @@
 ==IN PROGRESS==
 
 * Unit Tests - in progress (with robolectric)
+  Missing:
+  * Tests for AbstractSetTimerActivity/SetTimerXxxActivity
+  * ShowAlarmActivity
+  * TimeDisplayHelper
 
 ==TODO==
 

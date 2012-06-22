@@ -30,6 +30,8 @@ public class StartupActivityTest {
 
 	@Test
 	public void shouldSayStartup() throws Exception {
+		// this was the first robolectric unit test of this project. I admit it
+		// doesn't provide a lot of value :-)
 		String hello = this.activity.getResources().getString(
 				R.string.startup_message);
 		assertThat(hello, equalTo("Starting…"));
