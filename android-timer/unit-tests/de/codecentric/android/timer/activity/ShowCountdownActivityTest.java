@@ -6,10 +6,7 @@ import static org.mockito.Mockito.*;
 
 import org.hamcrest.Matchers;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 import org.mockito.Mock;
-
-import com.xtremelabs.robolectric.RobolectricTestRunner;
 
 import de.codecentric.android.timer.ActionForServiceState;
 import de.codecentric.android.timer.ServiceStateIterator;
@@ -20,7 +17,6 @@ import de.codecentric.android.timer.service.ServiceState;
  * 
  * @author Bastian Krol
  */
-@RunWith(RobolectricTestRunner.class)
 public class ShowCountdownActivityTest extends
 		AbstractCountdownServiceClientTest<ShowCountdownActivity> {
 
@@ -57,13 +53,14 @@ public class ShowCountdownActivityTest extends
 	@Test
 	public void shouldHandleNoStateExceptCountingDownAndPaused()
 			throws Exception {
-		ServiceStateIterator.forAllServiceStatesExcept(new ActionForServiceState() {
-			@Override
-			public void execute(ServiceState serviceState) {
-				assertThat(activity.getHandledServiceStates(),
-						not(Matchers.hasItemInArray(serviceState)));
-			}
-		}, ServiceState.COUNTING_DOWN, ServiceState.PAUSED);
+		ServiceStateIterator.forAllServiceStatesExcept(
+				new ActionForServiceState() {
+					@Override
+					public void execute(ServiceState serviceState) {
+						assertThat(activity.getHandledServiceStates(),
+								not(Matchers.hasItemInArray(serviceState)));
+					}
+				}, ServiceState.COUNTING_DOWN, ServiceState.PAUSED);
 	}
 
 	@Test

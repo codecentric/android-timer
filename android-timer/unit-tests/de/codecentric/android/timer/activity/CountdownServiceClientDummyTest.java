@@ -2,10 +2,10 @@ package de.codecentric.android.timer.activity;
 
 import org.junit.Test;
 
-import de.codecentric.android.timer.activity.CountdownServiceDummyTest.DummyCountdownServiceClientImpl;
+import de.codecentric.android.timer.activity.CountdownServiceClientDummyTest.DummyCountdownServiceClientImpl;
 import de.codecentric.android.timer.service.ServiceState;
 
-public class CountdownServiceDummyTest extends
+public class CountdownServiceClientDummyTest extends
 		AbstractCountdownServiceClientTest<DummyCountdownServiceClientImpl> {
 
 	@Override
@@ -20,7 +20,7 @@ public class CountdownServiceDummyTest extends
 
 	@Test
 	public void testAbstractCountdownServiceClientTestSetup() {
-		// just make sure super.before() works
+		// just make sure super.beforeAbstractCountdownServiceClientTest() works
 	}
 
 	static class DummyCountdownServiceClientImpl extends CountdownServiceClient {

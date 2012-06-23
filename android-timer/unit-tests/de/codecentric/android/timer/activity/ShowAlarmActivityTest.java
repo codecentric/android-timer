@@ -4,12 +4,8 @@ import static org.mockito.Mockito.*;
 
 import org.junit.Before;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import android.widget.Button;
-
-import com.xtremelabs.robolectric.RobolectricTestRunner;
-
 import de.codecentric.android.timer.R;
 import de.codecentric.android.timer.service.ServiceState;
 
@@ -18,7 +14,6 @@ import de.codecentric.android.timer.service.ServiceState;
  * 
  * @author Bastian Krol
  */
-@RunWith(RobolectricTestRunner.class)
 public class ShowAlarmActivityTest extends
 		AbstractCountdownServiceClientTest<ShowAlarmActivity> {
 

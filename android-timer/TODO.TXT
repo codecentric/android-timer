@@ -13,7 +13,6 @@
 * Unit Tests - in progress (with robolectric)
   Missing:
   * Tests for AbstractSetTimerActivity/SetTimerXxxActivity
-  * TimeDisplayHelper
 
 ==TODO==
 
