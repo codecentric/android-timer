@@ -67,6 +67,7 @@
 * Integration tests and/or UATs
   See http://developer.android.com/guide/topics/testing/testing_android.html
   - http://code.google.com/p/robotium/               - Black box testing framework
+  - https://github.com/calabash/calabash-android (cucumber for Android, needs ruby)
 
 * Configure warning sounds when x minutes/seconds are left
 
