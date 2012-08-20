@@ -34,7 +34,6 @@ All three projects need to be imported into your Eclipse workspace.
 
 Some class path variables need to be set up:
 
-* JUnit-Library (standard Eclipse variable, should be pre-configured)
 * ANDROID_SDK
     * should point to the root directory of your android SDK
     * needs to contain platform level 7
@@ -43,3 +42,19 @@ Some class path variables need to be set up:
     * needs to contain files named
         * robolectric-1.2-SNAPSHOT-jar-with-dependencies.jar
         * robolectric-1.2-SNAPSHOT-sources.jar
+* JUNIT
+* HAMCREST-CORE
+* HAMCREST-LIBRARY
+* MOCKITO-ALL
+
+*** Building the APK
+
+You need a keystore with a developer certificate to sign the APK.
+
+In Eclipse:
+* File - Export - Android - Export Android Application
+* Project: android-timer
+* Configure the keystore to use
+* Destination APK file: <your-project-home>/android-timer/release/android-timer.apk
+* Finish
+
