@@ -19,5 +19,3 @@ local.properties
 .svn
 tmp/
 *.bak
-
-.calabash_settings
