@@ -9,11 +9,15 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import de.codecentric.android.timer.R;
 import de.codecentric.android.timer.activity.ShowAlarmActivity;
+import de.codecentric.android.timer.util.PreferencesKeysValues;
+import de.codecentric.android.timer.util.TimeParts;
 
 /**
  * This service encapsulates the countdown timer, it is responsible for keeping
@@ -39,6 +43,8 @@ public class CountdownService extends Service {
 	static final int ALARM_NOTIFICATION_ID = 1;
 
 	private static final BigDecimal THOUSAND = new BigDecimal(1000);
+
+	private PreferencesKeysValues preferencesKeysValues;
 
 	private IBinder countdownServiceBinder;
 	private CountDownTimer countdownTimer;
@@ -73,6 +79,7 @@ public class CountdownService extends Service {
 	public void onCreate() {
 		Log.d(TAG, "onCreate()");
 		super.onCreate();
+		this.preferencesKeysValues = new PreferencesKeysValues(this);
 		this.serviceState = ServiceState.WAITING;
 		this.initialSecondsRoundedUp = null;
 		this.remainingMilliseconds = Long.MAX_VALUE;
@@ -323,7 +330,7 @@ public class CountdownService extends Service {
 			}
 
 			public void onFinish() {
-				CountdownService.this.onDelayTimerFinish();
+				CountdownService.this.startAlarm();
 			}
 		}.start();
 	}
@@ -331,11 +338,13 @@ public class CountdownService extends Service {
 	/**
 	 * Kicks off the alarm.
 	 */
-	private void onDelayTimerFinish() {
+	private void startAlarm() {
 		this.serviceState = ServiceState.BEEPING;
 		this.addStatusBarNotification();
 		this.ringAlarmSound();
 		this.startShowAlarmActivityFromService();
+		this.startMaxDurationTimer();
+
 	}
 
 	private void addStatusBarNotification() {
@@ -384,6 +393,44 @@ public class CountdownService extends Service {
 		}
 	}
 
+	/**
+	 * This makes sure the alarm only rings for the configured duration (if it
+	 * isn't cancelled by the user first).
+	 */
+	private void startMaxDurationTimer() {
+		long maxAlarmDurationSeconds = this
+				.loadMaximumDurationFromPreferences();
+		long maxAlarmDurationMilliseconds = maxAlarmDurationSeconds * 1000;
+		new CountDownTimer(maxAlarmDurationMilliseconds,
+				maxAlarmDurationMilliseconds) {
+			public void onTick(long millisUntilFinished) {
+				// nothing to do
+				System.out.println(".");
+			}
+
+			public void onFinish() {
+				onMaxDurationTimerFinished();
+			}
+
+		}.start();
+	}
+
+	private void onMaxDurationTimerFinished() {
+		CountdownService.this.stopAlarmSound();
+		stopShowAlarmActivityFromService();
+	}
+
+	void stopShowAlarmActivityFromService() {
+		Log.d(TAG, "stopShowAlarmActivityFromService()");
+		// actually, we gonna *start* an activity (doesn't matter which) and
+		// rely on the navigation automatism to go to the right activity. I
+		// would not know how to *stop* an activity from a service directly?
+		Intent arbitraryActivity = new Intent(getBaseContext(),
+				ShowAlarmActivity.class);
+		arbitraryActivity.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		getApplication().startActivity(arbitraryActivity);
+	}
+
 	private void cancelAlarmSound() {
 		Log.d(TAG, "stopBeeping()");
 		this.soundGizmo.stopAlarm();
@@ -421,5 +468,22 @@ public class CountdownService extends Service {
 		} else {
 			return 0f;
 		}
+	}
+
+	private long loadMaximumDurationFromPreferences() {
+		Log.d(TAG, "loadPreferences()");
+		SharedPreferences preferences = this.getPreferences();
+		String valueAsString = preferences.getString(
+				this.preferencesKeysValues.keyAlarmDuration,
+				String.valueOf(TimeParts.FIVE_MINUTES.getSecondsTotal()));
+		try {
+			return Long.parseLong(valueAsString);
+		} catch (NumberFormatException e) {
+			return TimeParts.FIVE_MINUTES.getSecondsTotal();
+		}
+	}
+
+	SharedPreferences getPreferences() {
+		return PreferenceManager.getDefaultSharedPreferences(this);
 	}
 }

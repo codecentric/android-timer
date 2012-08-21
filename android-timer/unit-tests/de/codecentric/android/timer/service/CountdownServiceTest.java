@@ -19,6 +19,7 @@ import org.mockito.Spy;
 import android.app.Notification;
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.os.CountDownTimer;
 import android.os.IBinder;
 
@@ -45,6 +46,9 @@ public class CountdownServiceTest {
 	@Mock
 	private CountDownTimer countDownTimer;
 
+	@Mock
+	private SharedPreferences preferences;
+
 	@Before
 	public void before() {
 		this.countdownService = new CountdownService();
@@ -54,6 +58,12 @@ public class CountdownServiceTest {
 		this.setSoundGizmo(this.soundGizmo);
 		doNothing().when(this.countdownService)
 				.startShowAlarmActivityFromService();
+
+		doReturn(this.preferences).when(this.countdownService).getPreferences();
+		when(
+				preferences.getLong(
+						eq("de.codecentric.android.timer.alarm_duration"),
+						anyLong())).thenReturn(300L);
 	}
 
 	@Test
@@ -345,8 +355,7 @@ public class CountdownServiceTest {
 	public void shouldStartAlarmWhenDelayTimerFinishes() {
 		// when the delay timer finishes and the alarm is finally to be kicked
 		// off
-		TimerWhitebox.callInternalMethod(this.countdownService,
-				"onDelayTimerFinish");
+		TimerWhitebox.callInternalMethod(this.countdownService, "startAlarm");
 
 		// then service should be in state BEEPING
 		assertTrue(this.countdownService.isBeeping());

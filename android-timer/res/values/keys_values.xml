@@ -47,7 +47,7 @@
     <string name="default_value_show_countdown_options">piechart+text</string>
 
     <!-- alarm duration -->
-    <integer name="default_value_alarm_duration">300</integer>
+    <string name="default_value_alarm_duration">300</string>
     <string name="key_alarm_duration">de.codecentric.android.timer.alarm_duration</string>
     
 </resources>

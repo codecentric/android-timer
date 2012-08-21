@@ -137,28 +137,67 @@ public class TimeParts implements Serializable {
 				timePartsArray[2], timePartsArray[3], timePartsArray[4]);
 	}
 
+	/**
+	 * The days part.
+	 * 
+	 * @return the days part
+	 */
 	public int getDays() {
 		return this.days;
 	}
 
+	/**
+	 * The hours part.
+	 * 
+	 * @return the hours part
+	 */
 	public int getHours() {
 		return this.hours;
 	}
 
+	/**
+	 * The minutes part.
+	 * 
+	 * @return the minutes part
+	 */
 	public int getMinutes() {
 		return this.minutes;
 	}
 
+	/**
+	 * The seconds part.
+	 * 
+	 * @return the seconds part
+	 */
 	public int getSeconds() {
 		return this.seconds;
 	}
 
+	/**
+	 * The milliseconds part.
+	 * 
+	 * @return the milliseconds part
+	 */
 	public int getMilliseconds() {
 		return this.milliseconds;
 	}
 
+	/**
+	 * Returns the total time in milliseconds.
+	 * 
+	 * @return the total time in milliseconds
+	 */
 	public long getMillisecondsTotal() {
 		return this.millisecondsTotal;
+	}
+
+	/**
+	 * Returns the total time in seconds, rounded towards zero.
+	 * 
+	 * @return the total time in seconds, rounded towards zero
+	 */
+	public long getSecondsTotal() {
+		return this.millisecondsTotal / MILLIS_PER_SECOND;
 	}
 
 	public int[] toIntArray() {

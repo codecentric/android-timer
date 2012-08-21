@@ -7,10 +7,10 @@
   probably also from ShowCountdownAct.) the new setting is not applied when
   going back to SetTimerAct.
 * Additional button in wheel view to reset a time part to zero
+* Alarm rings for 5 min max. Configurable.
 
 ==IN PROGRESS==
 
-* Alarm rings for 5 min max. Configurable.
 
 ==TODO==
 

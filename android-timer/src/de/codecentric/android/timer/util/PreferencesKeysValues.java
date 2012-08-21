@@ -36,10 +36,12 @@ public class PreferencesKeysValues {
 	public final String valueShowCountdownOptionsTextOnly;
 	public final String defaultValueShowCountdownOptions;
 
-	public final int defaultValueAlarmDuration;
+	public final String defaultValueAlarmDuration;
 	public final String keyAlarmDuration;
 
 	public PreferencesKeysValues(Context context) {
+		// TODO All values are read in every onCreate of each activity and the
+		// service. A lazy mechanism for loading the values would be better.
 		this.keyLastTimer = context.getString(R.string.key_last_timer);
 
 		this.keyUseHoursInput = context.getString(R.string.key_use_hours);
@@ -90,8 +92,8 @@ public class PreferencesKeysValues {
 		this.defaultValueTapAnywhereToPause = context.getResources()
 				.getBoolean(R.bool.default_value_tap_anywhere_to_pause);
 
-		this.defaultValueAlarmDuration = context.getResources().getInteger(
-				R.integer.default_value_alarm_duration);
+		this.defaultValueAlarmDuration = context.getResources().getString(
+				R.string.default_value_alarm_duration);
 		this.keyAlarmDuration = context.getResources().getString(
 				R.string.key_alarm_duration);
 	}
