@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_label">CC Timer</string>
-    <string name="app_name">CC Timer</string>
+    <string name="app_label">codecentric Timer</string>
+    <string name="app_name">codecentric Timer</string>
 
     <!-- startup -->
     <string name="startup_message">Starting…</string>
@@ -55,5 +55,7 @@
     <string name="dialog_title_show_countdown_options">Show countdown as</string>
     <string name="summary_show_countdown_options">How to visualize the countdown</string>
     <string name="title_show_countdown_options">Show countdown as…</string>
-
+    <string name="summary_alarm_duration">How long the alarm will ring until it stops automatically (in seconds)</string>
+    <string name="title_alarm_duration">Alarm duration</string>
+    
 </resources>

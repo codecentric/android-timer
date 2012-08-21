@@ -10,9 +10,7 @@
 
 ==IN PROGRESS==
 
-* Unit Tests - in progress (with robolectric)
-  Missing:
-  * Tests for AbstractSetTimerActivity/SetTimerXxxActivity
+* Alarm rings for 5 min max. Configurable.
 
 ==TODO==
 
@@ -20,10 +18,10 @@
   testability. Robolectric claims to work nicely with roboguice.
   http://code.google.com/p/roboguice/
   http://pivotal.github.com/robolectric/roboguice.html
+* Convert to Maven or Gradle project  
 
 === FEATURES NEEDED BEFORE PUBLISHING ON GOOGLE PLAY STORE ===
 
-* Alarm rings for 5 min max. Configurable.
 * Change configuration of time fields to use so that it is not possible to
   show hours and seconds but not minutes (which makes no sense). Use an option
   list with the following options:
@@ -38,6 +36,7 @@
 
 === OTHER FEATURES (LATER) ===
 
+* Unit Tests for AbstractSetTimerActivity/SetTimerXxxActivity
 * Make supressLeadingZeroOnHighestNonNullTimePart for ShowCountdownActivity
   configurable.
 * optional notification while counting down

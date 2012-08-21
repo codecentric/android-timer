@@ -68,5 +68,17 @@
                 android:title="@string/title_show_countdown_options" />
         </PreferenceCategory>
     </PreferenceScreen>
-
+    <PreferenceScreen
+        android:key="alarm_preference_screen"
+        android:title="Alarm" >
+        <PreferenceCategory android:title="Alarm settings" >
+            <EditTextPreference
+                android:inputType="number" 
+                android:defaultValue="@integer/default_value_alarm_duration"
+                android:key="@string/key_alarm_duration"
+                android:summary="@string/summary_alarm_duration"
+                android:title="@string/title_alarm_duration" />
+        </PreferenceCategory>
+    </PreferenceScreen>
+    
 </PreferenceScreen>

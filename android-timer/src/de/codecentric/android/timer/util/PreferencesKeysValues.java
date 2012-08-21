@@ -36,6 +36,9 @@ public class PreferencesKeysValues {
 	public final String valueShowCountdownOptionsTextOnly;
 	public final String defaultValueShowCountdownOptions;
 
+	public final int defaultValueAlarmDuration;
+	public final String keyAlarmDuration;
+
 	public PreferencesKeysValues(Context context) {
 		this.keyLastTimer = context.getString(R.string.key_last_timer);
 
@@ -86,5 +89,10 @@ public class PreferencesKeysValues {
 				.getString(R.string.key_tap_anywhere_to_pause);
 		this.defaultValueTapAnywhereToPause = context.getResources()
 				.getBoolean(R.bool.default_value_tap_anywhere_to_pause);
+
+		this.defaultValueAlarmDuration = context.getResources().getInteger(
+				R.integer.default_value_alarm_duration);
+		this.keyAlarmDuration = context.getResources().getString(
+				R.string.key_alarm_duration);
 	}
 }
