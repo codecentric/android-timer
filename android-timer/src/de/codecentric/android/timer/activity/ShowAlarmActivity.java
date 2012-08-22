@@ -16,7 +16,8 @@ public class ShowAlarmActivity extends CountdownServiceClient {
 
 	private static final ServiceState[] FINISHING_STATES = {
 			ServiceState.WAITING, ServiceState.COUNTING_DOWN,
-			ServiceState.PAUSED, ServiceState.FINISHED, ServiceState.EXIT };
+			ServiceState.PAUSED, ServiceState.FINISHED,
+			ServiceState.FINISHED_AUTOMATICALLY, ServiceState.EXIT };
 
 	/**
 	 * Called when the activity is first created.

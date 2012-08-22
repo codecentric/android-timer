@@ -52,6 +52,17 @@ public enum ServiceState {
 	FINISHED,
 
 	/**
+	 * The countdown had reached zero and the alarm has been ringing and has
+	 * been stopped automatically because it was ringing for the configured
+	 * maximum duration. Clients can still call
+	 * {@link CountdownService#stopCountdown()}, but it will have no effect.
+	 * Clients can start a new countdown by calling
+	 * {@link CountdownService#resetToWaiting()} followed by
+	 * {@link CountdownService#startCountdown(long)}.
+	 */
+	FINISHED_AUTOMATICALLY,
+
+	/**
 	 * The user has left the application.
 	 */
 	EXIT

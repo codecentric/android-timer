@@ -31,7 +31,8 @@ public class ShowCountdownActivity extends CountdownServiceClient {
 			ServiceState.COUNTING_DOWN, ServiceState.PAUSED };
 
 	private static final ServiceState[] FINISHING_STATES = {
-			ServiceState.WAITING, ServiceState.FINISHED, ServiceState.EXIT };
+			ServiceState.WAITING, ServiceState.FINISHED,
+			ServiceState.FINISHED_AUTOMATICALLY, ServiceState.EXIT };
 
 	private PieChartView pieChart;
 	private TimeDisplayHelper timeDisplay;

@@ -11,6 +11,7 @@
 
 ==IN PROGRESS==
 
+* Configure multiple timers and save them
 
 ==TODO==
 
@@ -22,13 +23,16 @@
 
 === FEATURES NEEDED BEFORE PUBLISHING ON GOOGLE PLAY STORE ===
 
+* [Bug] Change values in SetTimerActivity 
+  -> Go to Preferences
+  -> Go back
+  -> Edits are lost
 * Change configuration of time fields to use so that it is not possible to
   show hours and seconds but not minutes (which makes no sense). Use an option
   list with the following options:
   - hours, minutes and seconds
   - hours and minutes
   - minutes and seconds
-* Configure multiple timers and save them
 * Select alarm sound from:
   + Phone alarm tones and ringtones
   + Custom MP3 file
@@ -39,7 +43,8 @@
 * Unit Tests for AbstractSetTimerActivity/SetTimerXxxActivity
 * Make supressLeadingZeroOnHighestNonNullTimePart for ShowCountdownActivity
   configurable.
-* optional notification while counting down
+* Optional notification while counting down (default = ?)
+* Optional notification that an alarm has been stopped because max duration was reached (default = true) 
 
 * User hints (things that may not be obvious) - how can we tell the user
   about these features? 

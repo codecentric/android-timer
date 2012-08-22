@@ -48,6 +48,7 @@ public class CountdownService extends Service {
 
 	private IBinder countdownServiceBinder;
 	private CountDownTimer countdownTimer;
+	private CountDownTimer maxAlarmDurationTimer;
 	private ServiceState serviceState;
 
 	private BigDecimal initialSecondsRoundedUp;
@@ -156,9 +157,13 @@ public class CountdownService extends Service {
 	 */
 	public void stopAlarmSound() {
 		Log.d(TAG, "notifyAlarmSoundHasStopped()");
-		this.checkStatePrecondition(ServiceState.BEEPING);
-		this.cancelAlarmSound();
-		this.removeStatusBarNotification();
+
+		// The timer might just have been stopped automatically while the user
+		// pressed Stop Alarm more or less in the same moment.
+		if (this.serviceState == ServiceState.FINISHED_AUTOMATICALLY) {
+			return;
+		}
+		this.stopAlarmInternally();
 		this.serviceState = ServiceState.FINISHED;
 	}
 
@@ -180,11 +185,13 @@ public class CountdownService extends Service {
 	/**
 	 * Prepares the service to for a new countdown, after the last countdown has
 	 * been stopped. State transition from {@link ServiceState#FINISHED} or
-	 * {@link ServiceState#RESTART} to {@link ServiceState#WAITING}.
+	 * {@link ServiceState#FINISHED_AUTOMATICALLY} to
+	 * {@link ServiceState#WAITING}.
 	 */
 	public void resetToWaiting() {
 		Log.d(TAG, "resetToWaiting()");
-		this.checkStatePrecondition(ServiceState.FINISHED);
+		this.checkStatePrecondition(ServiceState.FINISHED,
+				ServiceState.FINISHED_AUTOMATICALLY);
 		this.serviceState = ServiceState.WAITING;
 		this.initialSecondsRoundedUp = null;
 		this.remainingMilliseconds = Long.MAX_VALUE;
@@ -256,7 +263,8 @@ public class CountdownService extends Service {
 	 *         {@link ServiceState#FINISHED}
 	 */
 	public boolean isFinished() {
-		return this.serviceState == ServiceState.FINISHED;
+		return this.serviceState == ServiceState.FINISHED
+				|| this.serviceState == ServiceState.FINISHED_AUTOMATICALLY;
 	}
 
 	/**
@@ -398,26 +406,43 @@ public class CountdownService extends Service {
 	 * isn't cancelled by the user first).
 	 */
 	private void startMaxDurationTimer() {
+		this.cancelMaxAlarmDurationTimer();
 		long maxAlarmDurationSeconds = this
 				.loadMaximumDurationFromPreferences();
 		long maxAlarmDurationMilliseconds = maxAlarmDurationSeconds * 1000;
-		new CountDownTimer(maxAlarmDurationMilliseconds,
-				maxAlarmDurationMilliseconds) {
+		this.maxAlarmDurationTimer = new CountDownTimer(
+				maxAlarmDurationMilliseconds, maxAlarmDurationMilliseconds) {
 			public void onTick(long millisUntilFinished) {
 				// nothing to do
-				System.out.println(".");
 			}
 
 			public void onFinish() {
-				onMaxDurationTimerFinished();
+				CountdownService.this.onMaxDurationTimerFinished();
 			}
-
 		}.start();
 	}
 
 	private void onMaxDurationTimerFinished() {
-		CountdownService.this.stopAlarmSound();
-		stopShowAlarmActivityFromService();
+		Log.d(TAG, "onMaxDurationTimerFinished()");
+		this.stopAlarmInternally();
+		this.serviceState = ServiceState.FINISHED_AUTOMATICALLY;
+		this.stopShowAlarmActivityFromService();
+	}
+
+	private void stopAlarmInternally() {
+		Log.d(TAG, "stopAlarmInternally()");
+		this.checkStatePrecondition(ServiceState.BEEPING);
+		this.cancelMaxAlarmDurationTimer();
+		this.cancelAlarmSound();
+		this.removeStatusBarNotification();
+	}
+
+	private void cancelMaxAlarmDurationTimer() {
+		Log.d(TAG, "cancelMaxAlarmDurationTimer()");
+		if (this.maxAlarmDurationTimer != null) {
+			this.maxAlarmDurationTimer.cancel();
+			this.maxAlarmDurationTimer = null;
+		}
 	}
 
 	void stopShowAlarmActivityFromService() {

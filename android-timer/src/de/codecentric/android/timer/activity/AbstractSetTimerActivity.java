@@ -21,7 +21,8 @@ import de.codecentric.android.timer.util.TimeParts;
 abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 
 	private static final ServiceState[] HANDLED_STATES = {
-			ServiceState.WAITING, ServiceState.FINISHED };
+			ServiceState.WAITING, ServiceState.FINISHED,
+			ServiceState.FINISHED_AUTOMATICALLY };
 	private static final ServiceState[] FINISHING_STATES = { ServiceState.EXIT };
 
 	private Button buttonStart;

@@ -53,6 +53,8 @@ class Navigation {
 		NAVIGATION_RULES = new HashMap<ServiceState, NavigationTarget>();
 		NAVIGATION_RULES.put(ServiceState.WAITING, NavigationTarget.SET_TIMER);
 		NAVIGATION_RULES.put(ServiceState.FINISHED, NavigationTarget.SET_TIMER);
+		NAVIGATION_RULES.put(ServiceState.FINISHED_AUTOMATICALLY,
+				NavigationTarget.SET_TIMER);
 		NAVIGATION_RULES.put(ServiceState.COUNTING_DOWN,
 				NavigationTarget.SHOW_COUNTDOWN);
 		NAVIGATION_RULES.put(ServiceState.PAUSED,
