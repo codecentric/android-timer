@@ -109,7 +109,8 @@ public class CountdownServiceTest {
 						try {
 							setServiceState(serviceState);
 							countdownService.startCountdown(ONE_SECOND);
-							fail("Should have thrown exception");
+							fail("Should have thrown exception for state "
+									+ serviceState);
 						} catch (IllegalStateException e) {
 							// expected
 						}
@@ -143,7 +144,8 @@ public class CountdownServiceTest {
 						try {
 							setServiceState(serviceState);
 							countdownService.pauseCountdown();
-							fail("Should have thrown exception");
+							fail("Should have thrown exception for state "
+									+ serviceState);
 						} catch (IllegalStateException e) {
 							// expected
 						}
@@ -174,7 +176,8 @@ public class CountdownServiceTest {
 						try {
 							setServiceState(serviceState);
 							countdownService.continueCountdown();
-							fail("Should have thrown exception");
+							fail("Should have thrown exception for state "
+									+ serviceState);
 						} catch (IllegalStateException e) {
 							// expected
 						}
@@ -201,19 +204,19 @@ public class CountdownServiceTest {
 
 	@Test
 	public void shouldThrowWhenStoppingAlarmSoundInWrongState() {
-		forAllServiceStatesExcept(ServiceState.BEEPING,
-				new ActionForServiceState() {
-					@Override
-					public void execute(ServiceState serviceState) {
-						try {
-							setServiceState(serviceState);
-							countdownService.stopAlarmSound();
-							fail("Should have thrown exception");
-						} catch (IllegalStateException e) {
-							// expected
-						}
-					}
-				});
+		forAllServiceStatesExcept(new ActionForServiceState() {
+			@Override
+			public void execute(ServiceState serviceState) {
+				try {
+					setServiceState(serviceState);
+					countdownService.stopAlarmSound();
+					fail("Should have thrown exception for state "
+							+ serviceState);
+				} catch (IllegalStateException e) {
+					// expected
+				}
+			}
+		}, ServiceState.BEEPING, ServiceState.FINISHED_AUTOMATICALLY);
 	}
 
 	@Test
@@ -254,19 +257,19 @@ public class CountdownServiceTest {
 
 	@Test
 	public void shouldThrowWhenResetToWaitingInWrongState() {
-		forAllServiceStatesExcept(ServiceState.FINISHED,
-				new ActionForServiceState() {
-					@Override
-					public void execute(ServiceState serviceState) {
-						try {
-							setServiceState(serviceState);
-							countdownService.resetToWaiting();
-							fail("Should have thrown exception");
-						} catch (IllegalStateException e) {
-							// expected
-						}
-					}
-				});
+		forAllServiceStatesExcept(new ActionForServiceState() {
+			@Override
+			public void execute(ServiceState serviceState) {
+				try {
+					setServiceState(serviceState);
+					countdownService.resetToWaiting();
+					fail("Should have thrown exception for state "
+							+ serviceState);
+				} catch (IllegalStateException e) {
+					// expected
+				}
+			}
+		}, ServiceState.FINISHED, ServiceState.FINISHED_AUTOMATICALLY);
 	}
 
 	@Test
