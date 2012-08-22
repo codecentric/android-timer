@@ -379,7 +379,7 @@ public class CountdownService extends Service {
 	}
 
 	private void removeStatusBarNotification() {
-		Log.d(TAG, "addStatusBarNotification()");
+		Log.d(TAG, "removeStatusBarNotification()");
 		this.notificationManager.cancel(TAG, ALARM_NOTIFICATION_ID);
 	}
 
