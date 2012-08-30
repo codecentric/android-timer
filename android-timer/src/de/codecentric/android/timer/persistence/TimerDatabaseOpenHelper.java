@@ -7,7 +7,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class TimerDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	public TimerDatabaseOpenHelper(Context context) {
-		super(context, Db.Timer.TABLE_NAME, null, Db.VERSION);
+		super(context, Db.DATABASE_NAME, null, Db.VERSION);
 	}
 
 	@Override
@@ -19,7 +19,7 @@ public class TimerDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if (newVersion <= 2) {
+		if (newVersion <= 3) {
 			for (String sql : Db.Timer.Statements.ALL_DROP_STATEMENTS) {
 				db.execSQL(sql);
 			}

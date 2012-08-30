@@ -86,6 +86,12 @@ abstract class CountdownServiceClient extends Activity {
 			super.startActivityForResult(preferencesIntent,
 					REQUEST_CODE_PREFERENCES);
 			return true;
+		case R.id.itemLoadTimer:
+			Log.d(this.getTag(), "item load timer clicked");
+			Intent listSavedTimerActivity = new Intent(this,
+					ManageTimersListActivity.class);
+			super.startActivity(listSavedTimerActivity);
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

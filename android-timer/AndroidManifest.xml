@@ -34,16 +34,19 @@
         </activity>
         <activity
             android:name=".activity.ShowCountdownActivity"
-            android:label="@string/app_name" >
+            android:label="@string/show_countdown_title" >
         </activity>
         <activity
             android:name=".activity.ShowAlarmActivity"
-            android:label="@string/app_name" >
+            android:label="@string/show_alarm_title" >
         </activity>
         <activity
             android:name=".activity.TimerPreferencesActivity"
             android:label="@string/preferences_title" >
         </activity>
+        <activity
+            android:name=".activity.ManageTimersListActivity"
+            android:label="@string/manage_timers_title" >
+        </activity>
     </application>
-
 </manifest>

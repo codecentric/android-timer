@@ -11,6 +11,7 @@ public class TimeParts implements Serializable {
 	public static final TimeParts FIVE_MINUTES = fromTimeParts(5, 0);
 	public static final TimeParts TEN_MINUTES = fromTimeParts(10, 0);
 	public static final TimeParts FIFTEEN_MINUTES = fromTimeParts(15, 0);
+	public static final TimeParts ONE_HOUR = fromTimeParts(1, 0, 0);
 
 	static final int MILLIS_PER_SECOND = 1000;
 	static final int SECONDS_PER_MINUTE = 60;

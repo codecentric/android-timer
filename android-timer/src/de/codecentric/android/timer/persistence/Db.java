@@ -1,31 +1,47 @@
 package de.codecentric.android.timer.persistence;
 
-class Db {
+public class Db {
 
-	static final int VERSION = 2;
+	static final int VERSION = 4;
+	static final String DATABASE_NAME = "cc_timer";
 
-	static final class Timer {
+	private Db() {
+		// disallow instantiation
+	}
+
+	public static final class Timer {
+
+		private Timer() {
+		}
+
 		static final String TABLE_NAME = "timer";
 
-		static final class Columns {
-			static final String ID = "ID";
-			static final String NAME = "NAME";
-			static final String MILLIS = "MILLIS";
-			static final String SOUND = "SOUND";
+		public enum Columns {
+			ID("_id"), NAME("name"), MILLIS("millis"), SOUND("sound");
+
+			/**
+			 * The name of this column in the database.
+			 */
+			public final String name;
+
+			private Columns(String name) {
+				this.name = name;
+			}
 		}
 
 		static final class Statements {
+
 			private static final String CREATE_TABLE = //
 			"CREATE TABLE " + TABLE_NAME + " (" //
-					+ Columns.ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " //
-					+ Columns.NAME + " TEXT NOT NULL, " //
-					+ Columns.MILLIS + " INTEGER NOT NULL, " //
-					+ Columns.SOUND + " TEXT" //
+					+ Columns.ID.name + " INTEGER PRIMARY KEY AUTOINCREMENT, " //
+					+ Columns.NAME.name + " TEXT NOT NULL, " //
+					+ Columns.MILLIS.name + " INTEGER NOT NULL, " //
+					+ Columns.SOUND.name + " TEXT" //
 					+ ")";
 			private static final String INDEX_NAME_UNIQUE = "IX_TIMER_NAME";
 			private static final String CREATE_INDEX = //
 			"CREATE UNIQUE INDEX IF NOT EXISTS " + INDEX_NAME_UNIQUE + " ON "
-					+ TABLE_NAME + " (" + Columns.NAME + ")";
+					+ TABLE_NAME + " (" + Columns.NAME.name + ")";
 			static final String[] ALL_CREATE_STATEMENTS = new String[] {
 					CREATE_TABLE, CREATE_INDEX };
 

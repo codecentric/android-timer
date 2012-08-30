@@ -1,5 +1,6 @@
 package de.codecentric.android.timer.persistence;
 
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 
 /**
@@ -8,6 +9,10 @@ import android.database.sqlite.SQLiteDatabase;
  * @author Bastian Krol
  */
 class DbAccess {
+
+	private DbAccess() {
+		// disallow instantiation
+	}
 
 	/**
 	 * Interface for something that is done with a database connection or inside
@@ -18,7 +23,19 @@ class DbAccess {
 		/**
 		 * Executes some updates/inserts on the given database.
 		 */
-		void execute(SQLiteDatabase dbw);
+		void execute(SQLiteDatabase db);
+
+	}
+
+	/**
+	 * Interface for something that is done with a database cursor .
+	 */
+	interface DatabaseCursorAction<T> {
+
+		/**
+		 * Executes some reads on the given database.
+		 */
+		T execute(Cursor cursor);
 
 	}
 
@@ -28,6 +45,14 @@ class DbAccess {
 			action.execute(db);
 		} finally {
 			db.close();
+		}
+	}
+
+	static <T> T doWithCursor(Cursor cursor, DatabaseCursorAction<T> action) {
+		try {
+			return action.execute(cursor);
+		} finally {
+			cursor.close();
 		}
 	}
 

@@ -1,4 +1,5 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item android:id="@+id/itemOptions" android:title="Preferences"></item>
-
+    <item android:id="@+id/itemLoadTimer" android:title="Load Timer"></item>
+    
 </menu>

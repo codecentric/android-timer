@@ -18,6 +18,7 @@
     <string name="set_timer_button_reset">00</string>
 
     <!-- show countdown view -->
+    <string name="show_countdown_title">Counting Down</string>
     <string name="show_countdown_double_zero">00</string>
     <string name="show_countdown_colon">:</string>
     <string name="show_countdown_button_pause">Pause</string>
@@ -26,6 +27,7 @@
     <string name="show_countdown_paused">PAUSED</string>
 
     <!-- show alarm view -->
+    <string name="show_alarm_title">Time\'s up</string>
     <string name="show_alarm_times">Time\'s</string>
     <string name="show_alarm_up">up!</string>
     <string name="show_alarm_stop_alarm">Stop Alarm</string>
@@ -57,5 +59,8 @@
     <string name="title_show_countdown_options">Show countdown as…</string>
     <string name="summary_alarm_duration">How long the alarm will ring until it stops automatically (in seconds)</string>
     <string name="title_alarm_duration">Alarm duration</string>
+    
+    <!-- manage timers activity -->
+    <string name="manage_timers_title">Manage Timers</string>
     
 </resources>
