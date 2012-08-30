@@ -44,8 +44,9 @@ public class TimerRepository {
 			throw new IllegalArgumentException("orderBy must not be null");
 		}
 		return this.db.query(Db.Timer.TABLE_NAME, new String[] {
-				Db.Timer.Columns.ID.name, Db.Timer.Columns.NAME.name }, null,
-				null, null, null, orderBy.name);
+				Db.Timer.Columns.ID.name, Db.Timer.Columns.NAME.name,
+				Db.Timer.Columns.MILLIS.name, Db.Timer.Columns.SOUND.name },
+				null, null, null, null, orderBy.name);
 	}
 
 	public Timer findByName(final String name) {
@@ -84,7 +85,7 @@ public class TimerRepository {
 	/**
 	 * Create some entries in the database so it's not so empty.
 	 */
-	public void createSampleEntries() {
+	public void createSampleEntriesIfEmpty() {
 		if (isEmpty()) {
 			this.doInTransaction(new DatabaseAction() {
 				@Override
@@ -93,7 +94,7 @@ public class TimerRepository {
 							.getMillisecondsTotal()));
 					insert(new Timer("Daily Scrum - 15 Minutes",
 							TimeParts.FIFTEEN_MINUTES.getMillisecondsTotal()));
-					insert(new Timer("One hour", TimeParts.ONE_HOUR
+					insert(new Timer("One Hour", TimeParts.ONE_HOUR
 							.getMillisecondsTotal()));
 				}
 			});

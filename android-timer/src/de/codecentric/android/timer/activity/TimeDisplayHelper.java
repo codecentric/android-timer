@@ -14,15 +14,8 @@ class TimeDisplayHelper {
 	private final TextView seconds;
 	private boolean supressLeadingZeroOnHighestNonNullTimePart;
 
-	private final NumberFormat numberFormatTwoDigits;
-	{
-		this.numberFormatTwoDigits = NumberFormat.getInstance();
-		this.numberFormatTwoDigits.setMaximumIntegerDigits(2);
-		this.numberFormatTwoDigits.setMinimumIntegerDigits(2);
-		this.numberFormatTwoDigits.setGroupingUsed(false);
-		this.numberFormatTwoDigits.setMaximumFractionDigits(0);
-		this.numberFormatTwoDigits.setMinimumFractionDigits(0);
-	}
+	private final NumberFormat numberFormatTwoDigits = TimeParts
+			.createNumberFormatTwoDigits();
 
 	TimeDisplayHelper(TextView hours, TextView minutes, TextView seconds) {
 		this(hours, minutes, seconds, false);

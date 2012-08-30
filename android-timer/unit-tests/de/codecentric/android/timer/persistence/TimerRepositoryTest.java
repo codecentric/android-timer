@@ -8,12 +8,10 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-import android.database.sqlite.SQLiteDatabase;
-
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
-import de.codecentric.android.timer.persistence.DbAccess.DatabaseAction;
 import de.codecentric.android.timer.service.CountdownService;
+import de.codecentric.android.timer.util.TimeParts;
 
 @RunWith(RobolectricTestRunner.class)
 public class TimerRepositoryTest {
@@ -41,26 +39,16 @@ public class TimerRepositoryTest {
 	public void shouldReadAndWriteFromDatabase() {
 		this.repository.deleteAll();
 		assertTrue(this.repository.isEmpty());
-		fillDatabase(this.repository);
+		this.repository.createSampleEntriesIfEmpty();
 		assertDatabaseHasCorrectValues(this.repository);
 	}
 
-	private void fillDatabase(final TimerRepository repository) {
-		repository.doInTransaction(new DatabaseAction() {
-			@Override
-			public void execute(SQLiteDatabase db) {
-				repository.insert(new Timer("timer-01", 30000));
-				repository.insert(new Timer("timer-02", 60000));
-				repository.insert(new Timer("timer-03", 12000));
-				repository.insert(new Timer("timer-04", 9000));
-			}
-		});
-	}
-
 	private void assertDatabaseHasCorrectValues(TimerRepository repository) {
-		assertEquals(30000, repository.findByName("timer-01").getMillis());
-		assertEquals(60000, repository.findByName("timer-02").getMillis());
-		assertEquals(12000, repository.findByName("timer-03").getMillis());
-		assertEquals(9000, repository.findByName("timer-04").getMillis());
+		assertEquals(TimeParts.FIVE_MINUTES.getMillisecondsTotal(), repository
+				.findByName("Five Minutes").getMillis());
+		assertEquals(TimeParts.FIFTEEN_MINUTES.getMillisecondsTotal(),
+				repository.findByName("Daily Scrum - 15 Minutes").getMillis());
+		assertEquals(TimeParts.ONE_HOUR.getMillisecondsTotal(), repository
+				.findByName("One Hour").getMillis());
 	}
 }

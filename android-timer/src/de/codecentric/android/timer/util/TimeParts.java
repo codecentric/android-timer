@@ -1,6 +1,7 @@
 package de.codecentric.android.timer.util;
 
 import java.io.Serializable;
+import java.text.NumberFormat;
 
 public class TimeParts implements Serializable {
 
@@ -23,6 +24,16 @@ public class TimeParts implements Serializable {
 	static final int DAYS_PER_NON_LEAP_YEAR = 365;
 	static final long MILLIS_PER_YEAR = ((long) MILLIS_PER_DAY)
 			* DAYS_PER_NON_LEAP_YEAR;
+
+	public static NumberFormat createNumberFormatTwoDigits() {
+		NumberFormat numberFormatTwoDigits = NumberFormat.getInstance();
+		numberFormatTwoDigits.setMaximumIntegerDigits(2);
+		numberFormatTwoDigits.setMinimumIntegerDigits(2);
+		numberFormatTwoDigits.setGroupingUsed(false);
+		numberFormatTwoDigits.setMaximumFractionDigits(0);
+		numberFormatTwoDigits.setMinimumFractionDigits(0);
+		return numberFormatTwoDigits;
+	}
 
 	private final long millisecondsTotal;
 
@@ -244,6 +255,30 @@ public class TimeParts implements Serializable {
 	public TimeParts removeMilliseconds() {
 		return fromTimeParts(this.days, this.hours, this.minutes, this.seconds,
 				0);
+	}
+
+	public String prettyPrint() {
+		NumberFormat format = createNumberFormatTwoDigits();
+		StringBuilder s = new StringBuilder();
+		if (this.days > 0) {
+			if (this.days == 1) {
+				s.append("1 day");
+			} else {
+				s.append(this.days);
+				s.append(" days");
+			}
+			s.append(", ");
+		}
+		s.append(format.format(this.hours));
+		this.appendTwoDigitTimePart(s, this.minutes, format);
+		this.appendTwoDigitTimePart(s, this.seconds, format);
+		return s.toString();
+	}
+
+	private void appendTwoDigitTimePart(StringBuilder s, long timePart,
+			NumberFormat format) {
+		s.append(":");
+		s.append(format.format(timePart));
 	}
 
 	@Override
