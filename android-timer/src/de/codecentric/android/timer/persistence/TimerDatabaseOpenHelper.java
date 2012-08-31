@@ -12,7 +12,7 @@ public class TimerDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		for (String sql : Db.Timer.Statements.ALL_CREATE_STATEMENTS) {
+		for (String sql : Db.TimerTable.Statements.ALL_CREATE_STATEMENTS) {
 			db.execSQL(sql);
 		}
 	}
@@ -20,10 +20,10 @@ public class TimerDatabaseOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		if (newVersion <= 3) {
-			for (String sql : Db.Timer.Statements.ALL_DROP_STATEMENTS) {
+			for (String sql : Db.TimerTable.Statements.ALL_DROP_STATEMENTS) {
 				db.execSQL(sql);
 			}
-			for (String sql : Db.Timer.Statements.ALL_CREATE_STATEMENTS) {
+			for (String sql : Db.TimerTable.Statements.ALL_CREATE_STATEMENTS) {
 				db.execSQL(sql);
 			}
 		}

@@ -3,15 +3,15 @@ package de.codecentric.android.timer.persistence;
 public class Db {
 
 	static final int VERSION = 4;
-	static final String DATABASE_NAME = "cc_timer";
+	static final String DATABASE_NAME = "codecentric_timer";
 
 	private Db() {
 		// disallow instantiation
 	}
 
-	public static final class Timer {
+	public static final class TimerTable {
 
-		private Timer() {
+		private TimerTable() {
 		}
 
 		static final String TABLE_NAME = "timer";

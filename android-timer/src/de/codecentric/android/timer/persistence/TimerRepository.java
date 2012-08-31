@@ -28,7 +28,7 @@ public class TimerRepository {
 	 *         the database, ordered by name.
 	 */
 	public Cursor findAllTimers() {
-		return this.findAllTimers(Db.Timer.Columns.NAME);
+		return this.findAllTimers(Db.TimerTable.Columns.NAME);
 	}
 
 	/**
@@ -39,21 +39,23 @@ public class TimerRepository {
 	 *         currently in the database. Should to be closed when reading from
 	 *         the cursor is finished.
 	 */
-	public Cursor findAllTimers(Db.Timer.Columns orderBy) {
+	public Cursor findAllTimers(Db.TimerTable.Columns orderBy) {
 		if (orderBy == null) {
 			throw new IllegalArgumentException("orderBy must not be null");
 		}
-		return this.db.query(Db.Timer.TABLE_NAME, new String[] {
-				Db.Timer.Columns.ID.name, Db.Timer.Columns.NAME.name,
-				Db.Timer.Columns.MILLIS.name, Db.Timer.Columns.SOUND.name },
-				null, null, null, null, orderBy.name);
+		return this.db.query(Db.TimerTable.TABLE_NAME, new String[] {
+				Db.TimerTable.Columns.ID.name, Db.TimerTable.Columns.NAME.name,
+				Db.TimerTable.Columns.MILLIS.name,
+				Db.TimerTable.Columns.SOUND.name }, null, null, null, null,
+				orderBy.name);
 	}
 
 	public Timer findByName(final String name) {
-		Cursor cursor = this.db.query(Db.Timer.TABLE_NAME, new String[] {
-				Db.Timer.Columns.ID.name, Db.Timer.Columns.NAME.name,
-				Db.Timer.Columns.MILLIS.name }, Db.Timer.Columns.NAME.name
-				+ " = ?", new String[] { name }, null, null, null);
+		Cursor cursor = this.db.query(Db.TimerTable.TABLE_NAME, new String[] {
+				Db.TimerTable.Columns.ID.name, Db.TimerTable.Columns.NAME.name,
+				Db.TimerTable.Columns.MILLIS.name },
+				Db.TimerTable.Columns.NAME.name + " = ?",
+				new String[] { name }, null, null, null);
 		return this.doWithCursor(cursor, new DatabaseCursorAction<Timer>() {
 			@Override
 			public Timer execute(Cursor cursor) {
@@ -64,18 +66,22 @@ public class TimerRepository {
 							"Found more than one timer with name " + name + ".");
 				}
 				cursor.moveToFirst();
-				return new Timer(cursor.getInt(0), cursor.getString(1), cursor
-						.getLong(2));
+				return readTimerFromCursor(cursor);
 			}
 		});
+	}
+
+	public Timer readTimerFromCursor(Cursor cursor) {
+		return new Timer(cursor.getInt(0), cursor.getString(1),
+				cursor.getLong(2));
 	}
 
 	/**
 	 * @return {@code true} iff the database is empty
 	 */
 	public boolean isEmpty() {
-		Cursor cursor = this.db.query(Db.Timer.TABLE_NAME,
-				new String[] { Db.Timer.Columns.MILLIS.name }, null, null,
+		Cursor cursor = this.db.query(Db.TimerTable.TABLE_NAME,
+				new String[] { Db.TimerTable.Columns.MILLIS.name }, null, null,
 				null, null, null);
 		boolean isEmpty = cursor.getCount() == 0;
 		cursor.close();
@@ -105,7 +111,7 @@ public class TimerRepository {
 		this.doInTransaction(new DatabaseAction() {
 			@Override
 			public void execute(SQLiteDatabase db) {
-				db.delete(Db.Timer.TABLE_NAME, null, null);
+				db.delete(Db.TimerTable.TABLE_NAME, null, null);
 			}
 		});
 	}
@@ -122,9 +128,9 @@ public class TimerRepository {
 	 */
 	public long insert(Timer timer) {
 		ContentValues values = new ContentValues(2);
-		values.put(Db.Timer.Columns.NAME.name, timer.getName());
-		values.put(Db.Timer.Columns.MILLIS.name, timer.getMillis());
-		long id = this.db.insertOrThrow(Db.Timer.TABLE_NAME, null, values);
+		values.put(Db.TimerTable.Columns.NAME.name, timer.getName());
+		values.put(Db.TimerTable.Columns.MILLIS.name, timer.getMillis());
+		long id = this.db.insertOrThrow(Db.TimerTable.TABLE_NAME, null, values);
 		timer.setId(id);
 		return id;
 	}

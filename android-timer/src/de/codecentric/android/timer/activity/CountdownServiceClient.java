@@ -38,6 +38,7 @@ import de.codecentric.android.timer.util.PreferencesKeysValues;
 abstract class CountdownServiceClient extends Activity {
 
 	protected static final int REQUEST_CODE_PREFERENCES = 1;
+	protected static final int REQUEST_CODE_LOAD_TIMER = 2;
 
 	private ServiceConnection serviceConnection;
 	private CountdownService countdownService;
@@ -88,9 +89,10 @@ abstract class CountdownServiceClient extends Activity {
 			return true;
 		case R.id.itemLoadTimer:
 			Log.d(this.getTag(), "item load timer clicked");
-			Intent listSavedTimerActivity = new Intent(this,
+			Intent manageTimersListActivity = new Intent(this,
 					ManageTimersListActivity.class);
-			super.startActivity(listSavedTimerActivity);
+			super.startActivityForResult(manageTimersListActivity,
+					REQUEST_CODE_LOAD_TIMER);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

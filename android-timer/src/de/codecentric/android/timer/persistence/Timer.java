@@ -1,11 +1,15 @@
 package de.codecentric.android.timer.persistence;
 
+import java.io.Serializable;
+
 /**
  * Represents a timer that can be saved to/retrieved from the database.
  * 
  * @author Bastian Krol
  */
-public class Timer {
+public class Timer implements Serializable {
+
+	private static final long serialVersionUID = 1L;
 
 	private long id;
 	private String name;
@@ -44,5 +48,11 @@ public class Timer {
 
 	public void setMillis(long millis) {
 		this.millis = millis;
+	}
+
+	@Override
+	public String toString() {
+		return "Timer [id=" + id + ", name=" + name + ", millis=" + millis
+				+ "]";
 	}
 }

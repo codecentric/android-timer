@@ -5,6 +5,10 @@ import de.codecentric.android.timer.R;
 
 public class PreferencesKeysValues {
 
+	public static final String APPLICATION_PACKAGE = "de.codecentric.android.timer";
+	public static final String APPLICATION_PACKAGE_PREFIX = APPLICATION_PACKAGE
+			+ ".";
+
 	public final String keyLastTimer;
 
 	public final String keyUseHoursInput;

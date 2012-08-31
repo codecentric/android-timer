@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import de.codecentric.android.timer.R;
+import de.codecentric.android.timer.persistence.Timer;
 import de.codecentric.android.timer.service.ServiceState;
 import de.codecentric.android.timer.util.TimeParts;
 
@@ -32,6 +33,8 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 	private boolean useHours;
 	private boolean useMinutes;
 	private boolean useSeconds;
+
+	private boolean dontLoadTimeFromPreferences;
 
 	/**
 	 * Called when the activity is first created.
@@ -157,11 +160,14 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 	}
 
 	private void loadFromPreferencesTime(SharedPreferences preferences) {
-		Log.d(this.getTag(), "loadTimerFromPreferences()");
-		long initialTimerMilliseconds = preferences.getLong(
-				this.getPreferencesKeysValues().keyLastTimer,
-				TimeParts.FIFTEEN_MINUTES.getMillisecondsTotal());
-		this.time = TimeParts.fromMillisExactly(initialTimerMilliseconds);
+		if (!this.dontLoadTimeFromPreferences) {
+			Log.d(this.getTag(), "loadTimerFromPreferences()");
+			long initialTimerMilliseconds = preferences.getLong(
+					this.getPreferencesKeysValues().keyLastTimer,
+					TimeParts.FIFTEEN_MINUTES.getMillisecondsTotal());
+			this.time = TimeParts.fromMillisExactly(initialTimerMilliseconds);
+		}
+		this.dontLoadTimeFromPreferences = false;
 	}
 
 	private void loadFromPreferencesFieldsToUse(SharedPreferences preferences) {
@@ -197,6 +203,20 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 			this.loadFromPreferencesFieldsToUse(this.getDefaultPreferences(),
 					this.useHours, this.useMinutes, this.useSeconds);
 			this.refreshView();
+		} else if (requestCode == REQUEST_CODE_LOAD_TIMER) {
+			Timer loadedTimer = (Timer) data
+					.getSerializableExtra(ManageTimersListActivity.LOAD_TIMER_RESULT);
+			if (resultCode == RESULT_OK && loadedTimer != null) {
+				// TODO Unit test loading of timers
+				// TODO Also display name of loaded timer
+				this.time = TimeParts
+						.fromMillisExactly(loadedTimer.getMillis());
+				this.dontLoadTimeFromPreferences = true;
+			} else if (requestCode == RESULT_OK && loadedTimer == null) {
+
+				Log.w(this.getTag(),
+						"ManageTimersListActivity returned RESULT_OK but no timer object.");
+			}
 		}
 	}
 
