@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/cc_logo_background"
+    android:orientation="vertical" >
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:paddingBottom="70dp" >
+
+        <TextView
+            android:id="@+id/saveTimerLabelName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="@string/save_timer_label_name"
+            android:textSize="20sp" />
+
+        <EditText
+            android:id="@+id/saveTimerEditTextName"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:inputType="text"
+            android:textSize="25sp" >
+        </EditText>
+
+        <TextView
+            android:id="@+id/saveTimerLabelTime"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:paddingTop="40dp"
+            android:text="@string/save_timer_label_time"
+            android:textSize="20sp" />
+
+        <TextView
+            android:id="@+id/saveTimerTextViewTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="9"
+            android:gravity="center_horizontal"
+            android:textSize="60sp" >
+        </TextView>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="5dp"
+        android:gravity="center_horizontal" >
+
+        <Button
+            android:id="@+id/saveTimerButtonSave"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/save_timer_button_save" />
+
+        <Button
+            android:id="@+id/saveTimerButtonCancel"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/save_timer_button_cancel" />
+    </LinearLayout>
+
+</RelativeLayout>

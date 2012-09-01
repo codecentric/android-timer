@@ -12,6 +12,13 @@
 ==IN PROGRESS==
 
 * Configure multiple timers and save them
+  - Loading timers is done
+  - Save timers is done
+  - TODO: Long click for context menu in manage timers view:
+    - Edit (name)
+    - Delete timer
+  - Use de.codecentric.android.timer.persistence.Timer value object in all activities
+    (at least SetTimerActivity) 
 
 ==TODO==
 

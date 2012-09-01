@@ -2,13 +2,20 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
         android:id="@+id/itemOptions"
-        android:title="Preferences">
+        android:title="@string/menu_preferences_title">
     </item>
     <item
         android:id="@+id/itemLoadTimer"
-        android:title="Load Timer"
+        android:title="@string/menu_load_timer_title"
+        android:enabled="false"
+        android:visible="false">
+
+    </item>
+    <item
+        android:id="@+id/itemSaveTimer"
+        android:title="@string/menu_save_timer_title"
         android:enabled="false"
         android:visible="false">
     </item>
-
+    
 </menu>

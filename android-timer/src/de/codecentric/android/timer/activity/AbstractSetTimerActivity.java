@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -187,8 +188,34 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 	}
 
 	@Override
-	protected boolean isLoadTimerEnabled() {
+	protected boolean isManageTimersEnabled() {
 		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		Log.d(this.getTag(), "onOptionsItemSelected(...)");
+		switch (item.getItemId()) {
+		case R.id.itemLoadTimer:
+			Log.d(this.getTag(), "item load timer clicked");
+			Intent manageTimersListActivity = new Intent(this,
+					ManageTimersListActivity.class);
+			super.startActivityForResult(manageTimersListActivity,
+					REQUEST_CODE_LOAD_TIMER);
+			return true;
+		case R.id.itemSaveTimer:
+			Log.d(this.getTag(), "item save timer clicked");
+			Intent saveTimerActivity = new Intent(this, SaveTimerActivity.class);
+			// TODO Make this activity use Timer object as model
+			long millis = this.getMillisFromControls();
+			Timer timer = new Timer(null, millis);
+			saveTimerActivity.putExtra(SaveTimerActivity.SAVE_TIMER_PARAM,
+					timer);
+			super.startActivity(saveTimerActivity);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override
@@ -196,23 +223,33 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 		Log.d(this.getTag(), "onActivityResult(" + requestCode + ", "
 				+ resultCode + ", " + data + ")");
 		if (requestCode == REQUEST_CODE_PREFERENCES) {
-			this.loadFromPreferencesFieldsToUse(this.getDefaultPreferences(),
-					this.useHours, this.useMinutes, this.useSeconds);
-			this.refreshView();
+			handlePreferenceResult();
 		} else if (requestCode == REQUEST_CODE_LOAD_TIMER) {
-			Timer loadedTimer = (Timer) data
-					.getSerializableExtra(ManageTimersListActivity.LOAD_TIMER_RESULT);
-			if (resultCode == RESULT_OK && loadedTimer != null) {
-				// TODO Unit test loading of timers
-				this.time = TimeParts
-						.fromMillisExactly(loadedTimer.getMillis());
-				this.adaptMissingControlsToTime();
-				this.saveCurrentStateToPreferences(loadedTimer.getMillis());
-			} else if (requestCode == RESULT_OK && loadedTimer == null) {
+			handleLoadTimerResult(requestCode, resultCode, data);
+		}
+	}
 
-				Log.w(this.getTag(),
-						"ManageTimersListActivity returned RESULT_OK but no timer object.");
-			}
+	private void handlePreferenceResult() {
+		Log.d(this.getTag(), "handlePreferenceResult()");
+		this.loadFromPreferencesFieldsToUse(this.getDefaultPreferences(),
+				this.useHours, this.useMinutes, this.useSeconds);
+		this.refreshView();
+	}
+
+	private void handleLoadTimerResult(int requestCode, int resultCode,
+			Intent data) {
+		Log.d(this.getTag(), "handleLoadTimerResult(" + requestCode + ", "
+				+ resultCode + ", " + data + ")");
+		Timer loadedTimer = (Timer) data
+				.getSerializableExtra(ManageTimersListActivity.LOAD_TIMER_RESULT);
+		if (resultCode == RESULT_OK && loadedTimer != null) {
+			this.time = TimeParts.fromMillisExactly(loadedTimer.getMillis());
+			this.adaptMissingControlsToTime();
+			this.saveCurrentStateToPreferences(loadedTimer.getMillis());
+		} else if (requestCode == RESULT_OK && loadedTimer == null) {
+
+			Log.w(this.getTag(),
+					"ManageTimersListActivity returned RESULT_OK but no timer object.");
 		}
 	}
 

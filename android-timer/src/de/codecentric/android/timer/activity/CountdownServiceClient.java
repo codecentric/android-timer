@@ -41,7 +41,9 @@ abstract class CountdownServiceClient extends Activity {
 
 	protected static final int REQUEST_CODE_PREFERENCES = 1;
 	protected static final int REQUEST_CODE_LOAD_TIMER = 2;
+
 	private static final int MENU_INDEX_LOAD_TIMER = 1;
+	private static final int MENU_INDEX_SAVE_TIMER = 2;
 
 	private ServiceConnection serviceConnection;
 	private CountdownService countdownService;
@@ -81,10 +83,16 @@ abstract class CountdownServiceClient extends Activity {
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
-		boolean loadTimerEnabled = this.isLoadTimerEnabled();
-		menu.getItem(MENU_INDEX_LOAD_TIMER).setEnabled(loadTimerEnabled);
-		menu.getItem(MENU_INDEX_LOAD_TIMER).setVisible(loadTimerEnabled);
+		boolean manageTimersEnabled = this.isManageTimersEnabled();
+		this.activateMenuItem(menu, manageTimersEnabled, MENU_INDEX_LOAD_TIMER);
+		this.activateMenuItem(menu, manageTimersEnabled, MENU_INDEX_SAVE_TIMER);
 		return true;
+	}
+
+	private void activateMenuItem(Menu menu, boolean manageTimersEnabled,
+			int menuItemIndex) {
+		menu.getItem(menuItemIndex).setEnabled(manageTimersEnabled);
+		menu.getItem(menuItemIndex).setVisible(manageTimersEnabled);
 	}
 
 	/**
@@ -95,7 +103,7 @@ abstract class CountdownServiceClient extends Activity {
 	 * @return {@code true} if and only if the menu item Load Timer is to be
 	 *         shown
 	 */
-	protected boolean isLoadTimerEnabled() {
+	protected boolean isManageTimersEnabled() {
 		return false;
 	}
 
@@ -109,13 +117,6 @@ abstract class CountdownServiceClient extends Activity {
 					TimerPreferencesActivity.class);
 			super.startActivityForResult(preferencesIntent,
 					REQUEST_CODE_PREFERENCES);
-			return true;
-		case R.id.itemLoadTimer:
-			Log.d(this.getTag(), "item load timer clicked");
-			Intent manageTimersListActivity = new Intent(this,
-					ManageTimersListActivity.class);
-			super.startActivityForResult(manageTimersListActivity,
-					REQUEST_CODE_LOAD_TIMER);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

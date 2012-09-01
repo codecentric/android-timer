@@ -13,6 +13,7 @@ public class Timer implements Serializable {
 
 	private long id;
 	private String name;
+	// TODO Make Timer use TimeParts instead of milliseconds
 	private long millis;
 
 	public Timer(String name, long millis) {

@@ -24,7 +24,6 @@ public class ManageTimersListActivity extends ListActivity {
 	static final String LOAD_TIMER_RESULT = APPLICATION_PACKAGE_PREFIX
 			+ LOAD_TIMER_RESULT_SUFFIX;
 
-	private TimerDatabaseOpenHelper helper;
 	private TimerRepository timerRepository;
 	private Cursor cursor;
 
@@ -32,7 +31,7 @@ public class ManageTimersListActivity extends ListActivity {
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 
-		this.helper = new TimerDatabaseOpenHelper(this);
+		TimerDatabaseOpenHelper helper = new TimerDatabaseOpenHelper(this);
 		this.timerRepository = new TimerRepository(helper);
 
 		// TODO Do we want to do this here in the activity? Each time it is

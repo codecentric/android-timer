@@ -4,6 +4,11 @@
     <string name="app_label">codecentric Timer</string>
     <string name="app_name">codecentric Timer</string>
 
+    <!-- menu -->
+    <string name="menu_preferences_title">Preferences</string>
+    <string name="menu_load_timer_title">Load Timer</string>
+    <string name="menu_save_timer_title">Save Timer</string>
+    
     <!-- startup -->
     <string name="startup_message">Starting…</string>
 
@@ -62,5 +67,12 @@
     
     <!-- manage timers activity -->
     <string name="manage_timers_title">Manage Timers</string>
+    
+    <!-- save timer activity -->
+    <string name="save_timer_title">Save Timer</string>
+    <string name="save_timer_label_name">Name: </string>
+    <string name="save_timer_label_time">Time: </string>
+    <string name="save_timer_button_save">Save</string>
+    <string name="save_timer_button_cancel">Cancel</string>
     
 </resources>
