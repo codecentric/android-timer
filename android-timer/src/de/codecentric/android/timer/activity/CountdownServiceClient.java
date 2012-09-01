@@ -6,8 +6,10 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -39,6 +41,7 @@ abstract class CountdownServiceClient extends Activity {
 
 	protected static final int REQUEST_CODE_PREFERENCES = 1;
 	protected static final int REQUEST_CODE_LOAD_TIMER = 2;
+	private static final int MENU_INDEX_LOAD_TIMER = 1;
 
 	private ServiceConnection serviceConnection;
 	private CountdownService countdownService;
@@ -74,6 +77,26 @@ abstract class CountdownServiceClient extends Activity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.xml.menu, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		boolean loadTimerEnabled = this.isLoadTimerEnabled();
+		menu.getItem(MENU_INDEX_LOAD_TIMER).setEnabled(loadTimerEnabled);
+		menu.getItem(MENU_INDEX_LOAD_TIMER).setVisible(loadTimerEnabled);
+		return true;
+	}
+
+	/**
+	 * Determines if the menu item Load Timer makes sense for this action.
+	 * Default is to return false. Override for actions that want to show this
+	 * menu item.
+	 * 
+	 * @return {@code true} if and only if the menu item Load Timer is to be
+	 *         shown
+	 */
+	protected boolean isLoadTimerEnabled() {
+		return false;
 	}
 
 	@Override
@@ -352,6 +375,21 @@ abstract class CountdownServiceClient extends Activity {
 			Log.d(this.getTag(),
 					"service not bound in unbindCountdownService()");
 		}
+	}
+
+	protected interface PreferenceEditAction {
+		void execute(SharedPreferences.Editor editor);
+	}
+
+	protected final void doWithEditablePreferences(PreferenceEditAction action) {
+		SharedPreferences preferences = this.getDefaultPreferences();
+		SharedPreferences.Editor editor = preferences.edit();
+		action.execute(editor);
+		editor.commit();
+	}
+
+	protected final SharedPreferences getDefaultPreferences() {
+		return PreferenceManager.getDefaultSharedPreferences(this);
 	}
 
 	/**

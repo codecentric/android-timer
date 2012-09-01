@@ -30,9 +30,13 @@
 * Change configuration of time fields to use so that it is not possible to
   show hours and seconds but not minutes (which makes no sense). Use an option
   list with the following options:
-  - hours, minutes and seconds
-  - hours and minutes
+  - minutes only
   - minutes and seconds
+  - hours and minutes
+  - hours, minutes and seconds
+  - Days and hours
+  - Days, hours and minutes
+  - Days, hours, minutes and seconds
 * Select alarm sound from:
   + Phone alarm tones and ringtones
   + Custom MP3 file
