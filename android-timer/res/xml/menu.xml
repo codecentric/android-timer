@@ -5,15 +5,15 @@
         android:title="@string/menu_preferences_title">
     </item>
     <item
-        android:id="@+id/itemLoadTimer"
-        android:title="@string/menu_load_timer_title"
+        android:id="@+id/itemManageFavorites"
+        android:title="@string/menu_manage_favorites_title"
         android:enabled="false"
         android:visible="false">
 
     </item>
     <item
-        android:id="@+id/itemSaveTimer"
-        android:title="@string/menu_save_timer_title"
+        android:id="@+id/itemSaveAsFavorite"
+        android:title="@string/menu_save_as_favorite_title"
         android:enabled="false"
         android:visible="false">
     </item>

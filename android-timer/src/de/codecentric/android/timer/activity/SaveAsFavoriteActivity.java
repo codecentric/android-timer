@@ -18,9 +18,9 @@ import de.codecentric.android.timer.persistence.TimerDatabaseOpenHelper;
 import de.codecentric.android.timer.persistence.TimerRepository;
 import de.codecentric.android.timer.util.TimeParts;
 
-public class SaveTimerActivity extends Activity {
+public class SaveAsFavoriteActivity extends Activity {
 
-	private static final String TAG = SaveTimerActivity.class.getName();
+	private static final String TAG = SaveAsFavoriteActivity.class.getName();
 
 	private static final String SAVE_TIMER_PARAM_SUFFIX = "save_timer_param";
 	static final String SAVE_TIMER_PARAM = APPLICATION_PACKAGE_PREFIX

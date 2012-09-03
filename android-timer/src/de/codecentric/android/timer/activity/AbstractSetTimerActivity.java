@@ -196,26 +196,40 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Log.d(this.getTag(), "onOptionsItemSelected(...)");
 		switch (item.getItemId()) {
-		case R.id.itemLoadTimer:
-			Log.d(this.getTag(), "item load timer clicked");
-			Intent manageTimersListActivity = new Intent(this,
-					ManageTimersListActivity.class);
-			super.startActivityForResult(manageTimersListActivity,
-					REQUEST_CODE_LOAD_TIMER);
+		case R.id.itemManageFavorites:
+			Log.d(this.getTag(), "item \"Favorites\" clicked");
+			Intent manageFavoritesActivity = new Intent(this,
+					ManageFavoritesActivity.class);
+			this.saveStateAndStartActivityForResult(
+					manageFavoritesActivity, REQUEST_CODE_MANAGE_FAVORITES);
 			return true;
-		case R.id.itemSaveTimer:
-			Log.d(this.getTag(), "item save timer clicked");
-			Intent saveTimerActivity = new Intent(this, SaveTimerActivity.class);
+		case R.id.itemSaveAsFavorite:
+			Log.d(this.getTag(), "item \"Save as Favorite\" clicked");
+			Intent saveAsFavoriteActivity = new Intent(this,
+					SaveAsFavoriteActivity.class);
 			// TODO Make this activity use Timer object as model
 			long millis = this.getMillisFromControls();
 			Timer timer = new Timer(null, millis);
-			saveTimerActivity.putExtra(SaveTimerActivity.SAVE_TIMER_PARAM,
-					timer);
-			super.startActivity(saveTimerActivity);
+			saveAsFavoriteActivity.putExtra(
+					SaveAsFavoriteActivity.SAVE_TIMER_PARAM, timer);
+			this.saveStateAndStartActivity(saveAsFavoriteActivity);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	@Override
+	protected void saveStateAndStartActivity(Intent intent) {
+		this.saveCurrentStateToPreferences();
+		super.startActivity(intent);
+	}
+
+	@Override
+	protected void saveStateAndStartActivityForResult(Intent intent,
+			int requestCode) {
+		this.saveCurrentStateToPreferences();
+		super.startActivityForResult(intent, requestCode);
 	}
 
 	@Override
@@ -224,8 +238,8 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 				+ resultCode + ", " + data + ")");
 		if (requestCode == REQUEST_CODE_PREFERENCES) {
 			handlePreferenceResult();
-		} else if (requestCode == REQUEST_CODE_LOAD_TIMER) {
-			handleLoadTimerResult(requestCode, resultCode, data);
+		} else if (requestCode == REQUEST_CODE_MANAGE_FAVORITES) {
+			handleLoadFavoriteResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -236,20 +250,22 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 		this.refreshView();
 	}
 
-	private void handleLoadTimerResult(int requestCode, int resultCode,
+	private void handleLoadFavoriteResult(int requestCode, int resultCode,
 			Intent data) {
-		Log.d(this.getTag(), "handleLoadTimerResult(" + requestCode + ", "
+		Log.d(this.getTag(), "handleLoadFavoriteResult(" + requestCode + ", "
 				+ resultCode + ", " + data + ")");
-		Timer loadedTimer = (Timer) data
-				.getSerializableExtra(ManageTimersListActivity.LOAD_TIMER_RESULT);
-		if (resultCode == RESULT_OK && loadedTimer != null) {
-			this.time = TimeParts.fromMillisExactly(loadedTimer.getMillis());
-			this.adaptMissingControlsToTime();
-			this.saveCurrentStateToPreferences(loadedTimer.getMillis());
-		} else if (requestCode == RESULT_OK && loadedTimer == null) {
-
-			Log.w(this.getTag(),
-					"ManageTimersListActivity returned RESULT_OK but no timer object.");
+		if (resultCode == RESULT_OK && data != null) {
+			Timer loadedTimer = (Timer) data
+					.getSerializableExtra(ManageFavoritesActivity.LOAD_TIMER_RESULT);
+			if (loadedTimer != null) {
+				this.time = TimeParts
+						.fromMillisExactly(loadedTimer.getMillis());
+				this.adaptMissingControlsToTime();
+				this.saveCurrentStateToPreferences(loadedTimer.getMillis());
+			} else if (requestCode == RESULT_OK && loadedTimer == null) {
+				Log.w(this.getTag(),
+						"ManageFavoritesActivity returned RESULT_OK but returned data has no timer object.");
+			}
 		}
 	}
 
@@ -356,6 +372,10 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 			Log.d(this.getTag(), "service not bound in leaveApp()");
 		}
 		super.finish();
+	}
+
+	private void saveCurrentStateToPreferences() {
+		this.saveCurrentStateToPreferences(this.getMillisFromControls());
 	}
 
 	private void saveCurrentStateToPreferences(final long milliseconds) {

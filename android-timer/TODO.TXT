@@ -8,17 +8,25 @@
   going back to SetTimerAct.
 * Additional button in wheel view to reset a time part to zero
 * Alarm rings for 5 min max. Configurable.
+* [Bug] Change values in SetTimerActivity 
+  -> Go to Preferences
+  -> Go back
+  -> Edits are lost
 
 ==IN PROGRESS==
 
 * Configure multiple timers and save them
-  - Loading timers is done
-  - Save timers is done
-  - TODO: Long click for context menu in manage timers view:
-    - Edit (name)
-    - Delete timer
   - Use de.codecentric.android.timer.persistence.Timer value object in all activities
     (at least SetTimerActivity) 
+  - Long click for context menu in manage timers view:
+    - TODO Rename
+    - DONE Delete timer
+  - DONE Load timers
+  - DONE Save timers
+  - DONE Bug: Change timer -> Menu -> Save as Favorite: Timer is correctly saved but
+    SetTimerActivtiy has old values when returning from SaveTimerView. 
+  - DONE BUG: Change timer -> Menu -> Favorites -> Return: SetTimerActivtiy has old values 
+    when returning from SaveTimerView.
 
 ==TODO==
 
@@ -30,10 +38,6 @@
 
 === FEATURES NEEDED BEFORE PUBLISHING ON GOOGLE PLAY STORE ===
 
-* [Bug] Change values in SetTimerActivity 
-  -> Go to Preferences
-  -> Go back
-  -> Edits are lost
 * Change configuration of time fields to use so that it is not possible to
   show hours and seconds but not minutes (which makes no sense). Use an option
   list with the following options:

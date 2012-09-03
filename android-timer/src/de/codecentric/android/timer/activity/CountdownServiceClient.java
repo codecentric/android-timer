@@ -40,7 +40,7 @@ import de.codecentric.android.timer.util.PreferencesKeysValues;
 abstract class CountdownServiceClient extends Activity {
 
 	protected static final int REQUEST_CODE_PREFERENCES = 1;
-	protected static final int REQUEST_CODE_LOAD_TIMER = 2;
+	protected static final int REQUEST_CODE_MANAGE_FAVORITES = 2;
 
 	private static final int MENU_INDEX_LOAD_TIMER = 1;
 	private static final int MENU_INDEX_SAVE_TIMER = 2;
@@ -115,12 +115,42 @@ abstract class CountdownServiceClient extends Activity {
 			Log.d(this.getTag(), "item options clicked");
 			Intent preferencesIntent = new Intent(this,
 					TimerPreferencesActivity.class);
-			super.startActivityForResult(preferencesIntent,
+			this.saveStateAndStartActivityForResult(preferencesIntent,
 					REQUEST_CODE_PREFERENCES);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
+	}
+
+	/**
+	 * If needed by the activity, this saves the current state and afterwards
+	 * calls {@code startActivity}. Not that this implementation just delegates
+	 * to {@code startActivity} and does not save anything, but it gives
+	 * subclasses a chance to override this method and save their state.
+	 * 
+	 * @param intent
+	 *            the intent
+	 */
+	protected void saveStateAndStartActivity(Intent intent) {
+		super.startActivity(intent);
+	}
+
+	/**
+	 * If needed by the activity, this saves the current state and afterwards
+	 * calls {@code startActivityForResult}. Not that this implementation just
+	 * delegates to {@code startActivityForResult} and does not save anything,
+	 * but it gives subclasses a chance to override this method and save their
+	 * state.
+	 * 
+	 * @param intent
+	 *            the intent
+	 * @param requestCode
+	 *            the request code
+	 */
+	protected void saveStateAndStartActivityForResult(Intent intent,
+			int requestCode) {
+		super.startActivityForResult(intent, requestCode);
 	}
 
 	/**

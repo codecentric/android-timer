@@ -5,18 +5,27 @@ import android.app.ListActivity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 import android.widget.SimpleCursorAdapter.ViewBinder;
 import android.widget.TextView;
+import de.codecentric.android.timer.R;
 import de.codecentric.android.timer.persistence.Db;
 import de.codecentric.android.timer.persistence.Timer;
 import de.codecentric.android.timer.persistence.TimerDatabaseOpenHelper;
 import de.codecentric.android.timer.persistence.TimerRepository;
 import de.codecentric.android.timer.util.TimeParts;
 
-public class ManageTimersListActivity extends ListActivity {
+public class ManageFavoritesActivity extends ListActivity {
+
+	private static final String TAG = SaveAsFavoriteActivity.class.getName();
 
 	private static final int COLUMN_INDEX_MILLIS_IN_QUERY = Db.TimerTable.Columns.MILLIS
 			.ordinal();
@@ -24,20 +33,40 @@ public class ManageTimersListActivity extends ListActivity {
 	static final String LOAD_TIMER_RESULT = APPLICATION_PACKAGE_PREFIX
 			+ LOAD_TIMER_RESULT_SUFFIX;
 
+	private static final int CONTEXT_MENU_ITEM_ID_DELETE = 0;
+	private static final int CONTEXT_MENU_ITEM_ID_RENAME = 1;
+
 	private TimerRepository timerRepository;
 	private Cursor cursor;
 
 	@Override
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
+		this.initRepository();
+		this.initDatabaseAdapter();
+		super.registerForContextMenu(super.getListView());
+	}
 
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (this.cursor != null) {
+			this.cursor.close();
+		}
+		if (this.timerRepository != null) {
+			this.timerRepository.close();
+		}
+	}
+
+	private void initRepository() {
 		TimerDatabaseOpenHelper helper = new TimerDatabaseOpenHelper(this);
 		this.timerRepository = new TimerRepository(helper);
-
 		// TODO Do we want to do this here in the activity? Each time it is
 		// created? Rather not.
 		this.timerRepository.createSampleEntriesIfEmpty();
+	}
 
+	private void initDatabaseAdapter() {
 		this.cursor = this.timerRepository.findAllTimers();
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
 				android.R.layout.simple_list_item_2, cursor, new String[] {
@@ -61,19 +90,9 @@ public class ManageTimersListActivity extends ListActivity {
 	}
 
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (this.cursor != null) {
-			this.cursor.close();
-		}
-		if (this.timerRepository != null) {
-			this.timerRepository.close();
-		}
-	}
-
-	@Override
 	protected void onListItemClick(ListView listView, View itemView,
 			int position, long id) {
+		Log.d(TAG, "onListItemClick(" + position + ", " + id + ")");
 		Cursor itemAtPosition = (Cursor) getListView().getItemAtPosition(
 				position);
 		Timer timer = this.timerRepository.readTimerFromCursor(itemAtPosition);
@@ -81,5 +100,39 @@ public class ManageTimersListActivity extends ListActivity {
 		resultIntent.putExtra(LOAD_TIMER_RESULT, timer);
 		this.setResult(RESULT_OK, resultIntent);
 		this.finish();
+	}
+
+	@Override
+	public void onCreateContextMenu(ContextMenu menu, View view,
+			ContextMenuInfo menuInfo) {
+		menu.add(Menu.NONE, CONTEXT_MENU_ITEM_ID_DELETE, 0,
+				R.string.manage_timers_context_menu_delete_label);
+		menu.add(Menu.NONE, CONTEXT_MENU_ITEM_ID_RENAME, 1,
+				R.string.manage_timers_context_menu_rename_label);
+	}
+
+	@Override
+	public boolean onContextItemSelected(MenuItem contextMenuItem) {
+		AdapterView.AdapterContextMenuInfo info;
+		try {
+			info = (AdapterView.AdapterContextMenuInfo) contextMenuItem
+					.getMenuInfo();
+		} catch (ClassCastException e) {
+			Log.e(TAG, "bad menuInfo", e);
+			return false;
+		}
+
+		long timerId = getListAdapter().getItemId(info.position);
+
+		if (contextMenuItem.getItemId() == CONTEXT_MENU_ITEM_ID_DELETE) {
+			this.timerRepository.delete(timerId);
+			this.initDatabaseAdapter();
+			return true;
+		} else if (contextMenuItem.getItemId() == CONTEXT_MENU_ITEM_ID_RENAME) {
+			// TODO Implement
+			return true;
+		} else {
+			return false;
+		}
 	}
 }

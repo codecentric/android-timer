@@ -6,8 +6,8 @@
 
     <!-- menu -->
     <string name="menu_preferences_title">Preferences</string>
-    <string name="menu_load_timer_title">Load Timer</string>
-    <string name="menu_save_timer_title">Save Timer</string>
+    <string name="menu_manage_favorites_title">Favorites</string>
+    <string name="menu_save_as_favorite_title">Save as Favorite</string>
     
     <!-- startup -->
     <string name="startup_message">Starting…</string>
@@ -67,6 +67,8 @@
     
     <!-- manage timers activity -->
     <string name="manage_timers_title">Manage Timers</string>
+    <string name="manage_timers_context_menu_delete_label">Delete</string>
+    <string name="manage_timers_context_menu_rename_label">Rename</string>
     
     <!-- save timer activity -->
     <string name="save_timer_title">Save Timer</string>

@@ -45,11 +45,11 @@
             android:label="@string/preferences_title" >
         </activity>
         <activity
-            android:name=".activity.ManageTimersListActivity"
+            android:name=".activity.ManageFavoritesActivity"
             android:label="@string/manage_timers_title" >
         </activity>
         <activity
-            android:name=".activity.SaveTimerActivity"
+            android:name=".activity.SaveAsFavoriteActivity"
             android:label="@string/save_timer_title" >
         </activity>
     </application>

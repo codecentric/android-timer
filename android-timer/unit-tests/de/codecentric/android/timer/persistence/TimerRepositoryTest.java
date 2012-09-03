@@ -16,6 +16,9 @@ import de.codecentric.android.timer.util.TimeParts;
 @RunWith(RobolectricTestRunner.class)
 public class TimerRepositoryTest {
 
+	private static final String NAME = "test-timer";
+	private static final long MILLIS = 123456L;
+
 	private CountdownService countdownService;
 	private TimerRepository repository;
 
@@ -28,6 +31,8 @@ public class TimerRepositoryTest {
 		TimerDatabaseOpenHelper helper = new TimerDatabaseOpenHelper(
 				this.countdownService);
 		this.repository = new TimerRepository(helper);
+		this.repository.deleteAll();
+		assertTrue(this.repository.isEmpty());
 	}
 
 	@After
@@ -36,14 +41,30 @@ public class TimerRepositoryTest {
 	}
 
 	@Test
-	public void shouldReadAndWriteFromDatabase() {
-		this.repository.deleteAll();
-		assertTrue(this.repository.isEmpty());
-		this.repository.createSampleEntriesIfEmpty();
-		assertDatabaseHasCorrectValues(this.repository);
+	public void shouldInsert() {
+		Timer timer = new Timer(NAME, MILLIS);
+		long id = this.repository.insert(timer);
+		assertTrue(id >= 0);
+		Timer timerFromDb = this.repository.findByName(NAME);
+		assertNotNull(timerFromDb);
+		assertEquals(timer, timerFromDb);
 	}
 
-	private void assertDatabaseHasCorrectValues(TimerRepository repository) {
+	@Test
+	public void shouldDeleteById() {
+		long id = this.repository.insert(new Timer(NAME, MILLIS));
+		assertFalse(this.repository.isEmpty());
+		this.repository.delete(id);
+		assertTrue(this.repository.isEmpty());
+	}
+
+	@Test
+	public void shouldCreateSampleEntries() {
+		this.repository.createSampleEntriesIfEmpty();
+		assertDatabaseHasSampleEntries(this.repository);
+	}
+
+	private void assertDatabaseHasSampleEntries(TimerRepository repository) {
 		assertEquals(TimeParts.FIVE_MINUTES.getMillisecondsTotal(), repository
 				.findByName("Five Minutes").getMillis());
 		assertEquals(TimeParts.FIFTEEN_MINUTES.getMillisecondsTotal(),
@@ -51,4 +72,5 @@ public class TimerRepositoryTest {
 		assertEquals(TimeParts.ONE_HOUR.getMillisecondsTotal(), repository
 				.findByName("One Hour").getMillis());
 	}
+
 }

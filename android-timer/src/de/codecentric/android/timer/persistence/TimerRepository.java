@@ -107,6 +107,17 @@ public class TimerRepository {
 		}
 	}
 
+	public void delete(final long id) {
+		this.doInTransaction(new DatabaseAction() {
+			@Override
+			public void execute(SQLiteDatabase db) {
+				db.delete(Db.TimerTable.TABLE_NAME,
+						Db.TimerTable.Columns.ID.name + " = ?",
+						new String[] { String.valueOf(id) });
+			}
+		});
+	}
+
 	public void deleteAll() {
 		this.doInTransaction(new DatabaseAction() {
 			@Override
