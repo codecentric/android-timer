@@ -19,7 +19,9 @@ public class TimerDatabaseOpenHelper extends SQLiteOpenHelper {
 
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-		if (newVersion <= 3) {
+		// TODO This only works until the first version with data base access is
+		// released into the wild. After that, we need a real migration logic.
+		if (newVersion <= Db.VERSION) {
 			for (String sql : Db.TimerTable.Statements.ALL_DROP_STATEMENTS) {
 				db.execSQL(sql);
 			}

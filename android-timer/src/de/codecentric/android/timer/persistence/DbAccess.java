@@ -28,12 +28,28 @@ class DbAccess {
 	}
 
 	/**
-	 * Interface for something that is done with a database cursor .
+	 * Interface for something that is done with a database cursor and returns
+	 * no result.
 	 */
-	interface DatabaseCursorAction<T> {
+	interface DatabaseCursorAction {
 
 		/**
 		 * Executes some reads on the given database.
+		 */
+		void execute(Cursor cursor);
+
+	}
+
+	/**
+	 * Interface for something that is done with a database cursor and returns a
+	 * result.
+	 */
+	interface DatabaseCursorResultAction<T> {
+
+		/**
+		 * Executes some reads on the given database and returns the result.
+		 * 
+		 * @return the result
 		 */
 		T execute(Cursor cursor);
 
@@ -48,7 +64,16 @@ class DbAccess {
 		}
 	}
 
-	static <T> T doWithCursor(Cursor cursor, DatabaseCursorAction<T> action) {
+	static void doWithCursor(Cursor cursor, DatabaseCursorAction action) {
+		try {
+			action.execute(cursor);
+		} finally {
+			cursor.close();
+		}
+	}
+
+	static <T> T doWithCursorForResult(Cursor cursor,
+			DatabaseCursorResultAction<T> action) {
 		try {
 			return action.execute(cursor);
 		} finally {

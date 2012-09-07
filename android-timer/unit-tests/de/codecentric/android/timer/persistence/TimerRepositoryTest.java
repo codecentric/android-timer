@@ -1,16 +1,19 @@
 package de.codecentric.android.timer.persistence;
 
+import static org.hamcrest.CoreMatchers.*;
 import static org.junit.Assert.*;
 import static org.mockito.MockitoAnnotations.*;
 
 import org.junit.After;
 import org.junit.Before;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import android.database.Cursor;
+
 import com.xtremelabs.robolectric.RobolectricTestRunner;
 
+import de.codecentric.android.timer.persistence.DbAccess.DatabaseCursorAction;
 import de.codecentric.android.timer.service.CountdownService;
 import de.codecentric.android.timer.util.TimeParts;
 
@@ -19,7 +22,7 @@ public class TimerRepositoryTest {
 
 	private static final String NAME = "test-timer";
 	private static final String ANOTHER_NAME = "another-test-timer";
-	private static final long MILLIS = 123456L;
+	private static final long MILLIS = 123L;
 	private static final long ANOTHER_MILLIS = 1302L;
 
 	private CountdownService countdownService;
@@ -58,23 +61,11 @@ public class TimerRepositoryTest {
 		this.repository.insert(null);
 	}
 
-	@Ignore
 	@Test
-	public void shouldNotInsertTwoTimersWithSameName() {
+	public void shouldInsertTwoTimersWithSameName() {
 		this.repository.insert(new Timer(NAME, MILLIS));
-		try {
-			// Second insert should fail due to unique constraint but doesn't.
-			// Strange enough, with update the unique constraint works.
-			this.repository.insert(new Timer(NAME, ANOTHER_MILLIS));
-			fail();
-		} catch (RuntimeException e) {
-			assertNotNull(e.getCause());
-			assertEquals(java.sql.SQLException.class, e.getCause().getClass());
-			assertTrue(e.getCause().getMessage()
-					.contains("constraint violation"));
-			assertTrue(e.getCause().getMessage()
-					.contains("column name is not unique"));
-		}
+		this.repository.insert(new Timer(NAME, ANOTHER_MILLIS));
+		checkTwoTimersWithSameName();
 	}
 
 	@Test
@@ -99,23 +90,16 @@ public class TimerRepositoryTest {
 		this.repository.update(new Timer(NAME, MILLIS));
 	}
 
-	public void shouldNotUpdateTwoTimersTooTheSameName() {
+	@Test
+	public void shouldUpdateTwoTimersTooTheSameName() {
 		this.repository.insert(new Timer(NAME, MILLIS));
 		long id = this.repository
 				.insert(new Timer(ANOTHER_NAME, ANOTHER_MILLIS));
 		Timer secondTimer = this.repository.findById(id);
 		secondTimer.setName(NAME);
-		try {
-			this.repository.update(secondTimer);
-			fail();
-		} catch (RuntimeException e) {
-			assertNotNull(e.getCause());
-			assertEquals(java.sql.SQLException.class, e.getCause().getClass());
-			assertTrue(e.getCause().getMessage()
-					.contains("constraint violation"));
-			assertTrue(e.getCause().getMessage()
-					.contains("column name is not unique"));
-		}
+		this.repository.update(secondTimer);
+
+		checkTwoTimersWithSameName();
 	}
 
 	@Test
@@ -168,5 +152,25 @@ public class TimerRepositoryTest {
 				repository.findById(2).getMillis());
 		assertEquals(TimeParts.ONE_HOUR.getMillisecondsTotal(), repository
 				.findById(3).getMillis());
+	}
+
+	private void checkTwoTimersWithSameName() {
+		Cursor allTimers = this.repository
+				.findAllTimers(Db.TimerTable.Columns.MILLIS);
+		this.repository.doWithCursor(allTimers, new DatabaseCursorAction() {
+
+			@Override
+			public void execute(Cursor cursor) {
+				assertThat(cursor.getCount(), is(equalTo(2)));
+				cursor.moveToFirst();
+				Timer timer1 = repository.readTimerFromCursor(cursor);
+				cursor.moveToNext();
+				Timer timer2 = repository.readTimerFromCursor(cursor);
+				assertThat(timer1.getName(), is(equalTo(NAME)));
+				assertThat(timer2.getName(), is(equalTo(NAME)));
+				assertThat(timer1.getMillis(), is(equalTo(MILLIS)));
+				assertThat(timer2.getMillis(), is(equalTo(ANOTHER_MILLIS)));
+			}
+		});
 	}
 }

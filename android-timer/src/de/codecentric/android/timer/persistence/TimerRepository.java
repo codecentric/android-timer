@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import de.codecentric.android.timer.persistence.DbAccess.DatabaseAction;
 import de.codecentric.android.timer.persistence.DbAccess.DatabaseCursorAction;
+import de.codecentric.android.timer.persistence.DbAccess.DatabaseCursorResultAction;
 import de.codecentric.android.timer.util.TimeParts;
 
 /**
@@ -74,18 +75,20 @@ public class TimerRepository {
 
 	private Timer findSingleResult(final Cursor cursor,
 			final String messageForMultipleResults) {
-		return this.doWithCursor(cursor, new DatabaseCursorAction<Timer>() {
-			@Override
-			public Timer execute(Cursor cursor) {
-				if (cursor.getCount() == 0) {
-					return null;
-				} else if (cursor.getCount() > 1) {
-					throw new IllegalStateException(messageForMultipleResults);
-				}
-				cursor.moveToFirst();
-				return readTimerFromCursor(cursor);
-			}
-		});
+		return this.doWithCursorForResult(cursor,
+				new DatabaseCursorResultAction<Timer>() {
+					@Override
+					public Timer execute(Cursor cursor) {
+						if (cursor.getCount() == 0) {
+							return null;
+						} else if (cursor.getCount() > 1) {
+							throw new IllegalStateException(
+									messageForMultipleResults);
+						}
+						cursor.moveToFirst();
+						return readTimerFromCursor(cursor);
+					}
+				});
 	}
 
 	public Timer readTimerFromCursor(Cursor cursor) {
@@ -188,8 +191,13 @@ public class TimerRepository {
 		DbAccess.doInTransaction(this.db, action);
 	}
 
-	public <T> T doWithCursor(Cursor cursor, DatabaseCursorAction<T> action) {
-		return DbAccess.doWithCursor(cursor, action);
+	public void doWithCursor(Cursor cursor, DatabaseCursorAction action) {
+		DbAccess.doWithCursor(cursor, action);
+	}
+
+	public <T> T doWithCursorForResult(Cursor cursor,
+			DatabaseCursorResultAction<T> action) {
+		return DbAccess.doWithCursorForResult(cursor, action);
 	}
 
 	public void close() {
