@@ -39,9 +39,6 @@ import de.codecentric.android.timer.util.PreferencesKeysValues;
  */
 abstract class CountdownServiceClient extends Activity {
 
-	protected static final int REQUEST_CODE_PREFERENCES = 1;
-	protected static final int REQUEST_CODE_MANAGE_FAVORITES = 2;
-
 	private static final int MENU_INDEX_LOAD_TIMER = 1;
 	private static final int MENU_INDEX_SAVE_TIMER = 2;
 
@@ -116,7 +113,7 @@ abstract class CountdownServiceClient extends Activity {
 			Intent preferencesIntent = new Intent(this,
 					TimerPreferencesActivity.class);
 			this.saveStateAndStartActivityForResult(preferencesIntent,
-					REQUEST_CODE_PREFERENCES);
+					RequestCode.PREFERENCES.code);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);

@@ -12,14 +12,16 @@
   -> Go to Preferences
   -> Go back
   -> Edits are lost
-
-==IN PROGRESS==
-
 * Configure multiple timers and save them
   - Use de.codecentric.android.timer.persistence.Timer value object in all activities
-    (at least SetTimerActivity) 
+    (at least SetTimerActivity)
+  - TODO Saving multiple timers with same name is currently forbidden by unique constraint
+    How to handle?
+    Allow? If not, where to check and how to tell user. 
+    > Insert: Breaks (though exc. does not occur in unit tests)
+    > Update: Breaks (as in unit test)
   - Long click for context menu in manage timers view:
-    - TODO Rename
+    - DONE Rename
     - DONE Delete timer
   - DONE Load timers
   - DONE Save timers
@@ -27,6 +29,22 @@
     SetTimerActivtiy has old values when returning from SaveTimerView. 
   - DONE BUG: Change timer -> Menu -> Favorites -> Return: SetTimerActivtiy has old values 
     when returning from SaveTimerView.
+  - DONE db connection leak? Not reproducible.
+  - TODO Create sample entries only once, save boolean flag to preferences and never
+    do it again.
+
+==IN PROGRESS==
+
+* Configure multiple timers and save them
+  - Use de.codecentric.android.timer.persistence.Timer value object in all activities
+    (at least SetTimerActivity)
+  - TODO Saving multiple timers with same name is currently forbidden by unique constraint
+    How to handle?
+    Allow? If not, where to check and how to tell user. 
+    > Insert: Breaks (though exc. does not occur in unit tests)
+    > Update: Breaks (as in unit test)
+  - TODO Create sample entries only once, save boolean flag to preferences and never
+    do it again.
 
 ==TODO==
 

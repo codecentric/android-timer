@@ -20,6 +20,10 @@ import de.codecentric.android.timer.util.TimeParts;
 
 public class SaveAsFavoriteActivity extends Activity {
 
+	private enum Mode {
+		INSERT, EDIT
+	}
+
 	private static final String TAG = SaveAsFavoriteActivity.class.getName();
 
 	private static final String SAVE_TIMER_PARAM_SUFFIX = "save_timer_param";
@@ -35,12 +39,14 @@ public class SaveAsFavoriteActivity extends Activity {
 
 	private Timer timer;
 
+	private Mode mode;
+
 	/**
 	 * Called when the activity is first created.
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		Log.d(TAG, "onCreate [SaveTimerActivity]");
+		Log.d(TAG, "onCreate [SaveAsFavoriteActivity]");
 		super.onCreate(savedInstanceState);
 		super.setContentView(R.layout.save_timer);
 		TimerDatabaseOpenHelper helper = new TimerDatabaseOpenHelper(this);
@@ -52,14 +58,32 @@ public class SaveAsFavoriteActivity extends Activity {
 
 	@Override
 	protected void onResume() {
-		Log.d(TAG, "onResume [SaveTimerActivity]");
+		Log.d(TAG, "onResume [SaveAsFavoriteActivity]");
 		super.onResume();
 		Intent intent = getIntent();
+
 		this.timer = (Timer) intent.getSerializableExtra(SAVE_TIMER_PARAM);
 		if (this.timer == null) {
 			this.timer = new Timer(null, 0L);
 		}
+
+		String action = intent.getAction();
+		if (action == null) {
+			throw new IllegalArgumentException("No action given.");
+		} else if (action.equals(Intent.ACTION_INSERT)) {
+			this.mode = Mode.INSERT;
+		} else if (action.equals(Intent.ACTION_EDIT)) {
+			this.mode = Mode.EDIT;
+			if (this.timer.getId() == 0) {
+				this.mode = Mode.INSERT;
+			}
+		}
 		this.refreshViewFromTimer();
+	}
+
+	protected void onDestroy() {
+		super.onDestroy();
+		this.closeRepository();
 	}
 
 	private void refreshViewFromTimer() {
@@ -139,7 +163,23 @@ public class SaveAsFavoriteActivity extends Activity {
 	private void onSaveClicked() {
 		Log.d(TAG, "onSaveClicked()");
 		this.setNameInTimer();
-		this.timerRepository.insert(this.timer);
+		switch (this.mode) {
+		case INSERT:
+			this.timerRepository.insert(this.timer);
+			break;
+		case EDIT:
+			this.timerRepository.update(this.timer);
+			break;
+		default:
+			throw new IllegalStateException("Unknown mode: " + this.mode);
+		}
 		this.finish();
+	}
+
+	private void closeRepository() {
+		if (this.timerRepository != null) {
+			this.timerRepository.close();
+			this.timerRepository = null;
+		}
 	}
 }

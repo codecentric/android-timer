@@ -200,8 +200,8 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 			Log.d(this.getTag(), "item \"Favorites\" clicked");
 			Intent manageFavoritesActivity = new Intent(this,
 					ManageFavoritesActivity.class);
-			this.saveStateAndStartActivityForResult(
-					manageFavoritesActivity, REQUEST_CODE_MANAGE_FAVORITES);
+			this.saveStateAndStartActivityForResult(manageFavoritesActivity,
+					RequestCode.MANAGE_FAVORITES.code);
 			return true;
 		case R.id.itemSaveAsFavorite:
 			Log.d(this.getTag(), "item \"Save as Favorite\" clicked");
@@ -212,6 +212,11 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 			Timer timer = new Timer(null, millis);
 			saveAsFavoriteActivity.putExtra(
 					SaveAsFavoriteActivity.SAVE_TIMER_PARAM, timer);
+			// TODO When we use Timer as object model, use
+			// Intent.ACTION_INSERT_OR_EDIT and decide in SaveAsFavoriteActivity
+			// if timer in db is to be inserted or updated, depending on if it
+			// already has an _id or not.
+			saveAsFavoriteActivity.setAction(Intent.ACTION_INSERT);
 			this.saveStateAndStartActivity(saveAsFavoriteActivity);
 			return true;
 		default:
@@ -236,9 +241,9 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		Log.d(this.getTag(), "onActivityResult(" + requestCode + ", "
 				+ resultCode + ", " + data + ")");
-		if (requestCode == REQUEST_CODE_PREFERENCES) {
+		if (requestCode == RequestCode.PREFERENCES.code) {
 			handlePreferenceResult();
-		} else if (requestCode == REQUEST_CODE_MANAGE_FAVORITES) {
+		} else if (requestCode == RequestCode.MANAGE_FAVORITES.code) {
 			handleLoadFavoriteResult(requestCode, resultCode, data);
 		}
 	}

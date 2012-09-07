@@ -21,6 +21,18 @@ public class TimerRepository {
 	}
 
 	/**
+	 * @return {@code true} iff the database is empty
+	 */
+	public boolean isEmpty() {
+		Cursor cursor = this.db.query(Db.TimerTable.TABLE_NAME,
+				new String[] { Db.TimerTable.Columns.MILLIS.name }, null, null,
+				null, null, null);
+		boolean isEmpty = cursor.getCount() == 0;
+		cursor.close();
+		return isEmpty;
+	}
+
+	/**
 	 * Returns a cursor that delivers all timers that are currently in the
 	 * database, ordered by name.
 	 * 
@@ -50,20 +62,25 @@ public class TimerRepository {
 				orderBy.name);
 	}
 
-	public Timer findByName(final String name) {
+	public Timer findById(long id) {
 		Cursor cursor = this.db.query(Db.TimerTable.TABLE_NAME, new String[] {
 				Db.TimerTable.Columns.ID.name, Db.TimerTable.Columns.NAME.name,
 				Db.TimerTable.Columns.MILLIS.name },
-				Db.TimerTable.Columns.NAME.name + " = ?",
-				new String[] { name }, null, null, null);
+				Db.TimerTable.Columns.ID.name + " = ?",
+				new String[] { String.valueOf(id) }, null, null, null);
+		return this.findSingleResult(cursor,
+				"Found more than one timer with id " + id + ".");
+	}
+
+	private Timer findSingleResult(final Cursor cursor,
+			final String messageForMultipleResults) {
 		return this.doWithCursor(cursor, new DatabaseCursorAction<Timer>() {
 			@Override
 			public Timer execute(Cursor cursor) {
 				if (cursor.getCount() == 0) {
 					return null;
 				} else if (cursor.getCount() > 1) {
-					throw new IllegalStateException(
-							"Found more than one timer with name " + name + ".");
+					throw new IllegalStateException(messageForMultipleResults);
 				}
 				cursor.moveToFirst();
 				return readTimerFromCursor(cursor);
@@ -74,18 +91,6 @@ public class TimerRepository {
 	public Timer readTimerFromCursor(Cursor cursor) {
 		return new Timer(cursor.getInt(0), cursor.getString(1),
 				cursor.getLong(2));
-	}
-
-	/**
-	 * @return {@code true} iff the database is empty
-	 */
-	public boolean isEmpty() {
-		Cursor cursor = this.db.query(Db.TimerTable.TABLE_NAME,
-				new String[] { Db.TimerTable.Columns.MILLIS.name }, null, null,
-				null, null, null);
-		boolean isEmpty = cursor.getCount() == 0;
-		cursor.close();
-		return isEmpty;
 	}
 
 	/**
@@ -107,7 +112,59 @@ public class TimerRepository {
 		}
 	}
 
+	/**
+	 * Inserts a new timer into the database. The timer must at least have a
+	 * name and milliseconds set.
+	 * 
+	 * @param timer
+	 *            the timer to save
+	 * @return the id of the timer that was generated when inserting it into the
+	 *         database. This value is also written to the id attribute of
+	 *         {@code timer}.
+	 */
+	public long insert(Timer timer) {
+		if (timer == null) {
+			throw new IllegalArgumentException("timer must not be null");
+		}
+		ContentValues values = new ContentValues(2);
+		values.put(Db.TimerTable.Columns.NAME.name, timer.getName());
+		values.put(Db.TimerTable.Columns.MILLIS.name, timer.getMillis());
+		long id = this.db.insertOrThrow(Db.TimerTable.TABLE_NAME, null, values);
+		timer.setId(id);
+		return id;
+	}
+
+	public void update(Timer timer) {
+		if (timer == null) {
+			throw new IllegalArgumentException("timer must not be null");
+		}
+		if (timer.getId() <= 0) {
+			throw new IllegalArgumentException("id must not be 0 or negative.");
+		}
+		ContentValues values = new ContentValues(2);
+		values.put(Db.TimerTable.Columns.NAME.name, timer.getName());
+		values.put(Db.TimerTable.Columns.MILLIS.name, timer.getMillis());
+		int rows = this.db.update(Db.TimerTable.TABLE_NAME, values,
+				Db.TimerTable.Columns.ID.name + " = ?",
+				new String[] { String.valueOf(timer.getId()) });
+		if (rows != 1) {
+			throw new IllegalStateException(
+					"Expected 1 to be updated, instead " + rows
+							+ " have been changed.");
+		}
+	}
+
+	public void delete(Timer timer) {
+		if (timer == null) {
+			throw new IllegalArgumentException("timer must not be null.");
+		}
+		this.delete(timer.getId());
+	}
+
 	public void delete(final long id) {
+		if (id <= 0) {
+			throw new IllegalArgumentException("id must not be 0 or negative.");
+		}
 		this.doInTransaction(new DatabaseAction() {
 			@Override
 			public void execute(SQLiteDatabase db) {
@@ -125,25 +182,6 @@ public class TimerRepository {
 				db.delete(Db.TimerTable.TABLE_NAME, null, null);
 			}
 		});
-	}
-
-	/**
-	 * Inserts a new timer into the database. The timer must at least have a
-	 * name and milliseconds set.
-	 * 
-	 * @param timer
-	 *            the timer to save
-	 * @return the id of the timer that was generated when inserting it into the
-	 *         database. This value is also written to the id attribute of
-	 *         {@code timer}.
-	 */
-	public long insert(Timer timer) {
-		ContentValues values = new ContentValues(2);
-		values.put(Db.TimerTable.Columns.NAME.name, timer.getName());
-		values.put(Db.TimerTable.Columns.MILLIS.name, timer.getMillis());
-		long id = this.db.insertOrThrow(Db.TimerTable.TABLE_NAME, null, values);
-		timer.setId(id);
-		return id;
 	}
 
 	public void doInTransaction(DatabaseAction action) {

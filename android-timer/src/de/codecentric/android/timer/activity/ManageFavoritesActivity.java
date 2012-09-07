@@ -43,19 +43,26 @@ public class ManageFavoritesActivity extends ListActivity {
 	public void onCreate(Bundle bundle) {
 		super.onCreate(bundle);
 		this.initRepository();
-		this.initDatabaseAdapter();
 		super.registerForContextMenu(super.getListView());
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		this.refreshViewFromDatabase();
+	}
+
+	@Override
+	protected void onPause() {
+		this.closeCursor();
+		super.onPause();
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if (this.cursor != null) {
-			this.cursor.close();
-		}
-		if (this.timerRepository != null) {
-			this.timerRepository.close();
-		}
+		this.closeCursor();
+		this.closeRepository();
 	}
 
 	private void initRepository() {
@@ -66,7 +73,15 @@ public class ManageFavoritesActivity extends ListActivity {
 		this.timerRepository.createSampleEntriesIfEmpty();
 	}
 
-	private void initDatabaseAdapter() {
+	private void closeRepository() {
+		if (this.timerRepository != null) {
+			this.timerRepository.close();
+			this.timerRepository = null;
+		}
+	}
+
+	private void refreshViewFromDatabase() {
+		this.closeCursor();
 		this.cursor = this.timerRepository.findAllTimers();
 		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this,
 				android.R.layout.simple_list_item_2, cursor, new String[] {
@@ -87,6 +102,13 @@ public class ManageFavoritesActivity extends ListActivity {
 			}
 		});
 		setListAdapter(adapter);
+	}
+
+	private void closeCursor() {
+		if (this.cursor != null) {
+			this.cursor.close();
+			this.cursor = null;
+		}
 	}
 
 	@Override
@@ -126,10 +148,16 @@ public class ManageFavoritesActivity extends ListActivity {
 
 		if (contextMenuItem.getItemId() == CONTEXT_MENU_ITEM_ID_DELETE) {
 			this.timerRepository.delete(timerId);
-			this.initDatabaseAdapter();
+			this.refreshViewFromDatabase();
 			return true;
 		} else if (contextMenuItem.getItemId() == CONTEXT_MENU_ITEM_ID_RENAME) {
-			// TODO Implement
+			Intent updateFavoriteIntent = new Intent(this,
+					SaveAsFavoriteActivity.class);
+			Timer timer = this.timerRepository.findById(timerId);
+			updateFavoriteIntent.putExtra(
+					SaveAsFavoriteActivity.SAVE_TIMER_PARAM, timer);
+			updateFavoriteIntent.setAction(Intent.ACTION_EDIT);
+			this.startActivity(updateFavoriteIntent);
 			return true;
 		} else {
 			return false;
