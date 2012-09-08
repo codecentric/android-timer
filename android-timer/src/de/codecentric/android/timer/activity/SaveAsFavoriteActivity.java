@@ -64,7 +64,7 @@ public class SaveAsFavoriteActivity extends Activity {
 
 		this.timer = (Timer) intent.getSerializableExtra(SAVE_TIMER_PARAM);
 		if (this.timer == null) {
-			this.timer = new Timer(null, 0L);
+			this.timer = new Timer(null, TimeParts.ZERO);
 		}
 
 		String action = intent.getAction();
@@ -92,8 +92,7 @@ public class SaveAsFavoriteActivity extends Activity {
 		} else {
 			this.editTextName.setText("");
 		}
-		this.textViewTime.setText(TimeParts
-				.fromMillisExactly(timer.getMillis()).prettyPrint());
+		this.textViewTime.setText(timer.getTimeParts().prettyPrint());
 	}
 
 	private void fetchViewObjects() {

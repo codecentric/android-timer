@@ -208,8 +208,7 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 			Intent saveAsFavoriteActivity = new Intent(this,
 					SaveAsFavoriteActivity.class);
 			// TODO Make this activity use Timer object as model
-			long millis = this.getMillisFromControls();
-			Timer timer = new Timer(null, millis);
+			Timer timer = new Timer(null, this.getTimePartsFromControls());
 			saveAsFavoriteActivity.putExtra(
 					SaveAsFavoriteActivity.SAVE_TIMER_PARAM, timer);
 			// TODO When we use Timer as object model, use
@@ -263,9 +262,10 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 			Timer loadedTimer = (Timer) data
 					.getSerializableExtra(ManageFavoritesActivity.LOAD_TIMER_RESULT);
 			if (loadedTimer != null) {
-				this.time = TimeParts
-						.fromMillisExactly(loadedTimer.getMillis());
+				// TODO Make this activity use Timer object as model
+				this.time = loadedTimer.getTimeParts();
 				this.adaptMissingControlsToTime();
+				// TODO Make this activity use Timer object as model
 				this.saveCurrentStateToPreferences(loadedTimer.getMillis());
 			} else if (requestCode == RESULT_OK && loadedTimer == null) {
 				Log.w(this.getTag(),
@@ -383,6 +383,8 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 		this.saveCurrentStateToPreferences(this.getMillisFromControls());
 	}
 
+	// TODO Make this activity use Timer object as model
+	// private void saveCurrentStateToPreferences(Timer timer) {
 	private void saveCurrentStateToPreferences(final long milliseconds) {
 		Log.d(this.getTag(), "saveStateToPreferences(): " + milliseconds + ", "
 				+ this.useHours + ", " + this.useMinutes + ", "

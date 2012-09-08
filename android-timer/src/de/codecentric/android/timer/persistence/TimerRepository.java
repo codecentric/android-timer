@@ -104,12 +104,10 @@ public class TimerRepository {
 			this.doInTransaction(new DatabaseAction() {
 				@Override
 				public void execute(SQLiteDatabase db) {
-					insert(new Timer("Five Minutes", TimeParts.FIVE_MINUTES
-							.getMillisecondsTotal()));
+					insert(new Timer("Five Minutes", TimeParts.FIVE_MINUTES));
 					insert(new Timer("Daily Scrum - 15 Minutes",
-							TimeParts.FIFTEEN_MINUTES.getMillisecondsTotal()));
-					insert(new Timer("One Hour", TimeParts.ONE_HOUR
-							.getMillisecondsTotal()));
+							TimeParts.FIFTEEN_MINUTES));
+					insert(new Timer("One Hour", TimeParts.ONE_HOUR));
 				}
 			});
 		}
@@ -131,7 +129,8 @@ public class TimerRepository {
 		}
 		ContentValues values = new ContentValues(2);
 		values.put(Db.TimerTable.Columns.NAME.name, timer.getName());
-		values.put(Db.TimerTable.Columns.MILLIS.name, timer.getMillis());
+		values.put(Db.TimerTable.Columns.MILLIS.name,
+				String.valueOf(timer.getMillis()));
 		long id = this.db.insertOrThrow(Db.TimerTable.TABLE_NAME, null, values);
 		timer.setId(id);
 		return id;
@@ -146,7 +145,8 @@ public class TimerRepository {
 		}
 		ContentValues values = new ContentValues(2);
 		values.put(Db.TimerTable.Columns.NAME.name, timer.getName());
-		values.put(Db.TimerTable.Columns.MILLIS.name, timer.getMillis());
+		values.put(Db.TimerTable.Columns.MILLIS.name,
+				String.valueOf(timer.getMillis()));
 		int rows = this.db.update(Db.TimerTable.TABLE_NAME, values,
 				Db.TimerTable.Columns.ID.name + " = ?",
 				new String[] { String.valueOf(timer.getId()) });

@@ -3,6 +3,14 @@ package de.codecentric.android.timer.util;
 import java.io.Serializable;
 import java.text.NumberFormat;
 
+/**
+ * An immutable representation of a time span. The time span is internally
+ * represented by the number of milliseconds it lasts, but calculated values for
+ * each time part (days, hours, minutes, seconds, milliseconds) in a human
+ * readable representation is available.
+ * 
+ * @author Bastian Krol
+ */
 public class TimeParts implements Serializable {
 
 	private static final long serialVersionUID = 1L;
@@ -287,5 +295,28 @@ public class TimeParts implements Serializable {
 				+ minutes + ", seconds=" + seconds + ", milliseconds="
 				+ milliseconds + ", millisecondsTotal=" + millisecondsTotal
 				+ "]";
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result
+				+ (int) (millisecondsTotal ^ (millisecondsTotal >>> 32));
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		TimeParts other = (TimeParts) obj;
+		if (millisecondsTotal != other.millisecondsTotal)
+			return false;
+		return true;
 	}
 }
