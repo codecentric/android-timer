@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import de.codecentric.android.timer.R;
 import de.codecentric.android.timer.activity.ShowAlarmActivity;
+import de.codecentric.android.timer.persistence.Timer;
 import de.codecentric.android.timer.util.PreferencesKeysValues;
 import de.codecentric.android.timer.util.TimeParts;
 
@@ -107,6 +108,17 @@ public class CountdownService extends Service {
 		Log.d(TAG, "onDestroy()");
 		this.stopCountdownTimer();
 		super.onDestroy();
+	}
+
+	/**
+	 * Starts the countdown. State transition from {@link ServiceState#WAITING}
+	 * to {@link ServiceState#COUNTING_DOWN}.
+	 * 
+	 * @param timer
+	 *            the timer object to read the the number of milliseconds from
+	 */
+	public void startCountdown(Timer timer) {
+		this.startCountdown(timer.getMillis());
 	}
 
 	/**

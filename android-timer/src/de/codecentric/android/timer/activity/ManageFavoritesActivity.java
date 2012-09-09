@@ -29,6 +29,7 @@ public class ManageFavoritesActivity extends ListActivity {
 
 	private static final int COLUMN_INDEX_MILLIS_IN_QUERY = Db.TimerTable.Columns.MILLIS
 			.ordinal();
+
 	private static final String LOAD_TIMER_RESULT_SUFFIX = "load_timer_result";
 	static final String LOAD_TIMER_RESULT = APPLICATION_PACKAGE_PREFIX
 			+ LOAD_TIMER_RESULT_SUFFIX;

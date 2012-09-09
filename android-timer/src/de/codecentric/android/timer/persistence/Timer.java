@@ -17,15 +17,19 @@ public class Timer implements Serializable {
 	private String name;
 	private TimeParts timeParts;
 
+	public static final long DEFAULT_ID_NOT_IN_DATABASE = -1;
+
 	public Timer(String name, TimeParts timeParts) {
 		if (timeParts == null) {
 			throw new IllegalArgumentException("timeParts must not be null.");
 		}
+		this.id = DEFAULT_ID_NOT_IN_DATABASE;
 		this.name = name;
 		this.timeParts = timeParts;
 	}
 
 	public Timer(String name, long millis) {
+		this.id = DEFAULT_ID_NOT_IN_DATABASE;
 		this.name = name;
 		this.timeParts = TimeParts.fromMillisExactly(millis);
 	}

@@ -30,7 +30,7 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 	private Button buttonStart;
 	private Button buttonClose;
 
-	private TimeParts time = TimeParts.FIFTEEN_MINUTES;
+	private Timer timer = new Timer(null, TimeParts.FIFTEEN_MINUTES);
 	private boolean useHours;
 	private boolean useMinutes;
 	private boolean useSeconds;
@@ -98,6 +98,17 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 
 	protected abstract TimeParts getTimePartsFromControls();
 
+	protected final void setTime(Timer timer) {
+		if (timer == null) {
+			throw new IllegalArgumentException("timer must not be null");
+		}
+		if (timer.getTimeParts() == null) {
+			throw new IllegalArgumentException(
+					"timer.getTimeParts() must not be null");
+		}
+		this.setTime(timer.getTimeParts());
+	}
+
 	protected abstract void setTime(TimeParts timeParts);
 
 	protected abstract void showAndHideTimeInputControls(boolean useHours,
@@ -142,7 +153,7 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 		this.showAndHideLabels();
 		this.showAndHideTimeInputControls(this.useHours, this.useMinutes,
 				this.useSeconds);
-		this.setTime(this.time);
+		this.setTime(this.timer);
 	}
 
 	private SharedPreferences loadPreferences() {
@@ -156,10 +167,16 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 
 	private void loadFromPreferencesTime(SharedPreferences preferences) {
 		Log.d(this.getTag(), "loadTimerFromPreferences()");
+		long initialTimerId = preferences.getLong(
+				this.getPreferencesKeysValues().keyLastTimerId,
+				Timer.DEFAULT_ID_NOT_IN_DATABASE);
+		String initialTimerName = preferences.getString(
+				this.getPreferencesKeysValues().keyLastTimerName, null);
 		long initialTimerMilliseconds = preferences.getLong(
-				this.getPreferencesKeysValues().keyLastTimer,
+				this.getPreferencesKeysValues().keyLastTimerMillis,
 				TimeParts.FIFTEEN_MINUTES.getMillisecondsTotal());
-		this.time = TimeParts.fromMillisExactly(initialTimerMilliseconds);
+		this.timer = new Timer(initialTimerId, initialTimerName,
+				initialTimerMilliseconds);
 	}
 
 	private void loadFromPreferencesFieldsToUse(SharedPreferences preferences) {
@@ -192,6 +209,11 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 		return true;
 	}
 
+	private void updateTimerFromControls() {
+		Log.d(this.getTag(), "updateTimerFromControls()");
+		this.timer.setTimeParts(this.getTimePartsFromControls());
+	}
+
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Log.d(this.getTag(), "onOptionsItemSelected(...)");
@@ -207,16 +229,12 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 			Log.d(this.getTag(), "item \"Save as Favorite\" clicked");
 			Intent saveAsFavoriteActivity = new Intent(this,
 					SaveAsFavoriteActivity.class);
-			// TODO Make this activity use Timer object as model
-			Timer timer = new Timer(null, this.getTimePartsFromControls());
+			this.updateTimerFromControls();
 			saveAsFavoriteActivity.putExtra(
-					SaveAsFavoriteActivity.SAVE_TIMER_PARAM, timer);
-			// TODO When we use Timer as object model, use
-			// Intent.ACTION_INSERT_OR_EDIT and decide in SaveAsFavoriteActivity
-			// if timer in db is to be inserted or updated, depending on if it
-			// already has an _id or not.
-			saveAsFavoriteActivity.setAction(Intent.ACTION_INSERT);
-			this.saveStateAndStartActivity(saveAsFavoriteActivity);
+					SaveAsFavoriteActivity.SAVE_TIMER_PARAM, this.timer);
+			saveAsFavoriteActivity.setAction(Intent.ACTION_INSERT_OR_EDIT);
+			this.saveStateAndStartActivityForResult(saveAsFavoriteActivity,
+					RequestCode.SAVE_FAVORITE.code);
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
@@ -244,6 +262,10 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 			handlePreferenceResult();
 		} else if (requestCode == RequestCode.MANAGE_FAVORITES.code) {
 			handleLoadFavoriteResult(requestCode, resultCode, data);
+		} else if (requestCode == RequestCode.SAVE_FAVORITE.code) {
+			handleSaveFavoriteResult(requestCode, resultCode, data);
+		} else {
+			super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
@@ -258,43 +280,72 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 			Intent data) {
 		Log.d(this.getTag(), "handleLoadFavoriteResult(" + requestCode + ", "
 				+ resultCode + ", " + data + ")");
+		String activityName = "ManageFavoritesActivity";
+		String resultKey = ManageFavoritesActivity.LOAD_TIMER_RESULT;
+		readTimerFromActivityResult(resultCode, data, resultKey, activityName);
+	}
+
+	private void handleSaveFavoriteResult(int requestCode, int resultCode,
+			Intent data) {
+		Log.d(this.getTag(), "handleSaveFavoriteResult(" + requestCode + ", "
+				+ resultCode + ", " + data + ")");
+
+		String resultKey = SaveAsFavoriteActivity.SAVE_TIMER_RESULT;
+		String activityName = "SaveAsFavoritesActivity";
+		readTimerFromActivityResult(resultCode, data, resultKey, activityName);
+	}
+
+	private void readTimerFromActivityResult(int resultCode, Intent data,
+			String resultKey, String activityName) {
 		if (resultCode == RESULT_OK && data != null) {
-			Timer loadedTimer = (Timer) data
-					.getSerializableExtra(ManageFavoritesActivity.LOAD_TIMER_RESULT);
-			if (loadedTimer != null) {
-				// TODO Make this activity use Timer object as model
-				this.time = loadedTimer.getTimeParts();
+			this.timer = (Timer) data.getSerializableExtra(resultKey);
+			if (this.timer != null) {
 				this.adaptMissingControlsToTime();
-				// TODO Make this activity use Timer object as model
-				this.saveCurrentStateToPreferences(loadedTimer.getMillis());
-			} else if (requestCode == RESULT_OK && loadedTimer == null) {
+				this.saveToPreferences(this.timer, this.useHours,
+						this.useMinutes, this.useSeconds);
+			} else {
 				Log.w(this.getTag(),
-						"ManageFavoritesActivity returned RESULT_OK but returned data has no timer object.");
+						activityName
+								+ " returned RESULT_OK but returned data has no timer object.");
 			}
+		} else if (resultCode == RESULT_OK) {
+			Log.w(this.getTag(), activityName
+					+ " returned RESULT_OK but returned not data.");
 		}
 	}
 
 	private void adaptTimeToMissingControls() {
 		Log.d(this.getTag(), "adaptTimeToMissingControls()");
-		if (this.time.getDays() != 0) {
-			Log.d(this.getTag(), "Removing days portion from " + this.time
-					+ " because corresponding input field is not displayed.");
-			this.time = this.time.removeDays();
+		// The condition in the first "if" needs to change if we ever support
+		// days in the UI. For now it removes the time, just as in
+		// adaptTimeToMissingControls instead of enabling the control.
+		if (this.timer.getTimeParts().getDays() != 0) {
+			Log.d(this.getTag(),
+					"Removing days portion from "
+							+ this.timer.getTimeParts()
+							+ " because corresponding input field is not displayed.");
+			this.timer.setTimeParts(this.timer.getTimeParts().removeDays());
 		}
-		if (!this.useHours && this.time.getHours() != 0) {
-			Log.d(this.getTag(), "Removing hours portion from " + this.time
-					+ " because corresponding input field is not displayed.");
-			this.time = this.time.removeHours();
+		if (!this.useHours && this.timer.getTimeParts().getHours() != 0) {
+			Log.d(this.getTag(),
+					"Removing hours portion from "
+							+ this.timer.getTimeParts()
+							+ " because corresponding input field is not displayed.");
+			this.timer.setTimeParts(this.timer.getTimeParts().removeHours());
 		}
-		if (!this.useMinutes && this.time.getMinutes() != 0) {
-			Log.d(this.getTag(), "Removing minutes portion from " + this.time
-					+ " because corresponding input field is not displayed.");
-			this.time = this.time.removeMinutes();
+		if (!this.useMinutes && this.timer.getTimeParts().getMinutes() != 0) {
+			Log.d(this.getTag(),
+					"Removing minutes portion from "
+							+ this.timer.getTimeParts()
+							+ " because corresponding input field is not displayed.");
+			this.timer.setTimeParts(this.timer.getTimeParts().removeMinutes());
 		}
-		if (!this.useSeconds && this.time.getSeconds() != 0) {
-			Log.d(this.getTag(), "Removing seconds portion from " + this.time
-					+ " because corresponding input field is not displayed.");
-			this.time = this.time.removeSeconds();
+		if (!this.useSeconds && this.timer.getTimeParts().getSeconds() != 0) {
+			Log.d(this.getTag(),
+					"Removing seconds portion from "
+							+ this.timer.getTimeParts()
+							+ " because corresponding input field is not displayed.");
+			this.timer.setTimeParts(this.timer.getTimeParts().removeSeconds());
 		}
 	}
 
@@ -303,27 +354,31 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 		// This first "if" needs to change if we ever support days in the UI.
 		// For now it removes the time, just as in adaptTimeToMissingControls
 		// instead of enabling the control.
-		if (this.time.getDays() != 0) {
-			Log.d(this.getTag(), "Removing days portion from " + this.time
-					+ " because corresponding input field is not displayed.");
-			this.time = this.time.removeDays();
+		if (this.timer.getTimeParts().getDays() != 0) {
+			Log.d(this.getTag(),
+					"Removing days portion from "
+							+ this.timer.getTimeParts()
+							+ " because corresponding input field is not displayed.");
+			this.timer.setTimeParts(this.timer.getTimeParts().removeDays());
 		}
-		if (!this.useHours && this.time.getHours() != 0) {
+		if (!this.useHours && this.timer.getTimeParts().getHours() != 0) {
 			Log.d(this.getTag(),
 					"Adding hours, minutes and seconds controls because time "
-							+ this.time + " has hours.");
+							+ this.timer.getTimeParts() + " has hours.");
 			this.useHours = true;
 			this.useMinutes = true;
 			this.useSeconds = true;
-		} else if (!this.useMinutes && this.time.getMinutes() != 0) {
+		} else if (!this.useMinutes
+				&& this.timer.getTimeParts().getMinutes() != 0) {
 			Log.d(this.getTag(),
 					"Adding minutes and seconds controls because time "
-							+ this.time + " has minutes.");
+							+ this.timer.getTimeParts() + " has minutes.");
 			this.useMinutes = true;
 			this.useSeconds = true;
-		} else if (!this.useSeconds && this.time.getSeconds() != 0) {
+		} else if (!this.useSeconds
+				&& this.timer.getTimeParts().getSeconds() != 0) {
 			Log.d(this.getTag(), "Adding seconds controls because time "
-					+ this.time + " has seconds.");
+					+ this.timer.getTimeParts() + " has seconds.");
 			this.useSeconds = true;
 		}
 	}
@@ -356,17 +411,12 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 
 	private void startCountdown() {
 		Log.d(this.getTag(), "startCountdown()");
-		long millis = getMillisFromControls();
-		Log.d(this.getTag(), "starting countdown with " + millis
-				+ " milliseconds");
-		this.getCountdownService().startCountdown(millis);
+		Log.d(this.getTag(),
+				"starting countdown with " + this.timer.getMillis()
+						+ " milliseconds");
+		this.getCountdownService().startCountdown(this.timer);
 		Log.d(this.getTag(), "countdown started");
-		this.saveCurrentStateToPreferences(millis);
-	}
-
-	private long getMillisFromControls() {
-		TimeParts timeParts = this.getTimePartsFromControls();
-		return timeParts.getMillisecondsTotal();
+		this.saveCurrentStateToPreferences();
 	}
 
 	private void leaveApp() {
@@ -380,20 +430,25 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 	}
 
 	private void saveCurrentStateToPreferences() {
-		this.saveCurrentStateToPreferences(this.getMillisFromControls());
+		Log.d(this.getTag(), "saveStateToPreferences()");
+		this.updateTimerFromControls();
+		this.saveToPreferences(this.timer, this.useHours, this.useMinutes,
+				this.useSeconds);
 	}
 
-	// TODO Make this activity use Timer object as model
-	// private void saveCurrentStateToPreferences(Timer timer) {
-	private void saveCurrentStateToPreferences(final long milliseconds) {
-		Log.d(this.getTag(), "saveStateToPreferences(): " + milliseconds + ", "
-				+ this.useHours + ", " + this.useMinutes + ", "
-				+ this.useSeconds);
+	private void saveToPreferences(final Timer timer, final boolean useHours,
+			final boolean useMinutes, final boolean useSeconds) {
+		Log.d(this.getTag(), "saveToPreferences(): " + timer + ", " + useHours
+				+ ", " + useMinutes + ", " + useSeconds);
 		doWithEditablePreferences(new PreferenceEditAction() {
 			@Override
 			public void execute(Editor editor) {
-				editor.putLong(getPreferencesKeysValues().keyLastTimer,
-						milliseconds);
+				editor.putLong(getPreferencesKeysValues().keyLastTimerId,
+						timer.getId());
+				editor.putLong(getPreferencesKeysValues().keyLastTimerMillis,
+						timer.getMillis());
+				editor.putString(getPreferencesKeysValues().keyLastTimerName,
+						timer.getName());
 				editor.putBoolean(getPreferencesKeysValues().keyUseHoursInput,
 						useHours);
 				editor.putBoolean(

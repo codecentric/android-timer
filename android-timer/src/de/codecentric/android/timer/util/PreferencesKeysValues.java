@@ -9,7 +9,9 @@ public class PreferencesKeysValues {
 	public static final String APPLICATION_PACKAGE_PREFIX = APPLICATION_PACKAGE
 			+ ".";
 
-	public final String keyLastTimer;
+	public final String keyLastTimerId;
+	public final String keyLastTimerMillis;
+	public final String keyLastTimerName;
 
 	public final String keyUseHoursInput;
 	public final String keyUseMinutesInput;
@@ -46,7 +48,10 @@ public class PreferencesKeysValues {
 	public PreferencesKeysValues(Context context) {
 		// TODO All values are read in every onCreate of each activity and the
 		// service. A lazy mechanism for loading the values would be better.
-		this.keyLastTimer = context.getString(R.string.key_last_timer);
+		this.keyLastTimerId = context.getString(R.string.key_last_timer_id);
+		this.keyLastTimerMillis = context
+				.getString(R.string.key_last_timer_millis);
+		this.keyLastTimerName = context.getString(R.string.key_last_timer_name);
 
 		this.keyUseHoursInput = context.getString(R.string.key_use_hours);
 		this.keyUseMinutesInput = context.getString(R.string.key_use_minutes);

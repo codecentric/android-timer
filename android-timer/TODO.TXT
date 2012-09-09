@@ -25,17 +25,21 @@
   - Create sample entries only once, save boolean flag to preferences and never
     do it again.
   - Inserting/updating multiple timers with same name.
+  - !!!!
+    Use de.codecentric.android.timer.persistence.Timer value object in all activities
+    (at least SetTimerActivity)
+    !!!!
 
 ==IN PROGRESS==
 
-* Configure multiple timers and save them
-  - Use de.codecentric.android.timer.persistence.Timer value object in all activities
-    (at least SetTimerActivity)
-  - TODO Create sample entries only once, save boolean flag to preferences and never
-    do it again.
 
 ==TODO==
 
+* Once a timer has been loaded from favorites, its db id is remembered forever.
+  "Save as Favorite" will always use this db id and update/overwrite this very
+  timer. We need some way to save it as a new timer OR update the existing timer. 
+* TODO Create sample db entries only once, save boolean flag to preferences and never
+    do it again.
 * Migrate app to roboguice (dependency injection for Android) to increase
   testability. Robolectric claims to work nicely with roboguice.
   http://code.google.com/p/roboguice/

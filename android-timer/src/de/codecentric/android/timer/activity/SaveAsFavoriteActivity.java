@@ -30,6 +30,10 @@ public class SaveAsFavoriteActivity extends Activity {
 	static final String SAVE_TIMER_PARAM = APPLICATION_PACKAGE_PREFIX
 			+ SAVE_TIMER_PARAM_SUFFIX;
 
+	private static final String SAVE_TIMER_RESULT_SUFFIX = "save_timer_result";
+	static final String SAVE_TIMER_RESULT = APPLICATION_PACKAGE_PREFIX
+			+ SAVE_TIMER_RESULT_SUFFIX;
+
 	private TimerRepository timerRepository;
 
 	private EditText editTextName;
@@ -70,14 +74,21 @@ public class SaveAsFavoriteActivity extends Activity {
 		String action = intent.getAction();
 		if (action == null) {
 			throw new IllegalArgumentException("No action given.");
-		} else if (action.equals(Intent.ACTION_INSERT)) {
-			this.mode = Mode.INSERT;
+		} else if (action.equals(Intent.ACTION_INSERT_OR_EDIT)) {
+			if (this.timer.getId() >= 0) {
+				this.mode = Mode.EDIT;
+			} else {
+				this.mode = Mode.INSERT;
+			}
 		} else if (action.equals(Intent.ACTION_EDIT)) {
 			this.mode = Mode.EDIT;
 			if (this.timer.getId() == 0) {
 				this.mode = Mode.INSERT;
 			}
+		} else {
+			throw new IllegalArgumentException();
 		}
+		Log.d(TAG, "SaveAsFavorite#mode: " + this.mode);
 		this.refreshViewFromTimer();
 	}
 
@@ -164,14 +175,20 @@ public class SaveAsFavoriteActivity extends Activity {
 		this.setNameInTimer();
 		switch (this.mode) {
 		case INSERT:
+			Log.d(TAG, "inserting new timer: " + this.timer);
 			this.timerRepository.insert(this.timer);
 			break;
 		case EDIT:
+			Log.d(TAG, "updating timer: " + this.timer);
 			this.timerRepository.update(this.timer);
 			break;
 		default:
 			throw new IllegalStateException("Unknown mode: " + this.mode);
 		}
+
+		Intent resultIntent = new Intent();
+		resultIntent.putExtra(SAVE_TIMER_RESULT, this.timer);
+		this.setResult(RESULT_OK, resultIntent);
 		this.finish();
 	}
 

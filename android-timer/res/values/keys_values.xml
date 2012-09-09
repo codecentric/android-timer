@@ -2,7 +2,9 @@
 <!-- preference keys, values and default values -->
 <resources>
 
-    <string name="key_last_timer">de.codecentric.android.timer.last_timer</string>
+    <string name="key_last_timer_id">de.codecentric.android.timer.last_timer_id</string>
+    <string name="key_last_timer_millis">de.codecentric.android.timer.last_timer_millis</string>
+    <string name="key_last_timer_name">de.codecentric.android.timer.last_timer_name</string>
 
     <!-- time input fields -->
     <string name="key_use_hours">de.codecentric.android.timer.use_hours</string>
