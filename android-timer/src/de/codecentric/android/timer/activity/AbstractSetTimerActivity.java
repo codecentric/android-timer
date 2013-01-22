@@ -411,12 +411,12 @@ abstract class AbstractSetTimerActivity extends CountdownServiceClient {
 
 	private void startCountdown() {
 		Log.d(this.getTag(), "startCountdown()");
+		this.saveCurrentStateToPreferences();
 		Log.d(this.getTag(),
 				"starting countdown with " + this.timer.getMillis()
 						+ " milliseconds");
 		this.getCountdownService().startCountdown(this.timer);
 		Log.d(this.getTag(), "countdown started");
-		this.saveCurrentStateToPreferences();
 	}
 
 	private void leaveApp() {
